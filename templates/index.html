@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        #container {
+            display: flex;
+            height: 80vh;
+        }
+
+        #container > * {
+            width: 100%;
+            height: 100%;
+        }
+
+        button {
+            font-size: 2em;
+            width: 100%;
+            height: 100%;
+        }
+        #logs {
+            height: 20vh;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+<div id="container">
+    <div>
+        <button onclick="left()">
+            Links
+        </button>
+    </div>
+    <div>
+        <button onclick="fire()">
+            Schieten
+        </button>
+    </div>
+    <div>
+        <button onclick="right()">
+            Rechts
+        </button>
+    </div>
+</div>
+<div id="logs">
+
+</div>
+<script>
+    logs = []
+
+    async function left(){
+        const response = await fetch('left')
+        logs.push((await response.text()))
+        update()
+    }
+
+    async function right() {
+        const response = await fetch('right')
+        console.log(response)
+        logs.push((await response.text()))
+        update()
+    }
+
+    async function fire() {
+        const response = await fetch('fire')
+        console.log(response)
+        logs.push((await response.text()))
+        update()
+    }
+
+    function update() {
+        let str = logs.reverse().join('<br/>')
+        document.getElementById('logs').innerHTML = str
+    }
+</script>
+</body>
+</html>
