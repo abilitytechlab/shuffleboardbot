@@ -1,0 +1,9 @@
+port = "COM3"
+baudrate = 9600
+fire_servo_range = [120, 180]
+stepper_range = [0, 100] # tweak this not sure about the range, was not used in old code
+fire_delay = 1.0
+fire_servo_name = "P0"
+stepper_name = "G0"
+stepper_axis = "X"
+stepper_step = 10
