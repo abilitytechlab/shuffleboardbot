@@ -9,6 +9,7 @@
     </content>
     <orderEntry type="jdk" jdkName="Python 3.10 (sjoelFlask)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="socket.io" level="application" />
   </component>
   <component name="PackageRequirementsSettings">
     <option name="removeUnused" value="true" />

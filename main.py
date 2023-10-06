@@ -3,6 +3,7 @@ import argparse
 from serial import SerialException
 
 from communicator.communicator_mock import MockCommunicator
+from server.sjoel_server_socket import SjoelServerSocket
 from settings import HostingSettings
 from sjoel_controller import SjoelController
 from server.sjoel_server_simple import SjoelServerSimple
@@ -60,5 +61,5 @@ if __name__ == '__main__':
         print(e)
         exit(1)
 
-    web = SjoelServerSimple(hosting_settings, controller)
+    web = SjoelServerSocket(hosting_settings, controller)
     web.run()

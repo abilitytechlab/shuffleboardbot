@@ -1,22 +1,18 @@
 from flask import Flask, render_template
+
+from server.sjoel_server_abc import SjoelServerAbc
 from settings import HostingSettings
 from sjoel_controller import SjoelController
 
 
-class SjoelServerSimple:
+class SjoelServerSimple(SjoelServerAbc):
     def __init__(self, settings: HostingSettings, controller: SjoelController):
-        self.controller = controller
-
+        super().__init__(settings, controller)
         self.app = Flask('Simple sjoel server')
-        self.app.route('/')(self._index)
+        self.app.route('/')(lambda: render_template('index.html'))
         self.app.route('/left')(self._left)
         self.app.route('/right')(self._right)
         self.app.route('/fire')(self._fire)
-
-        self.settings = settings
-
-    def _index(self):
-        return render_template('index.html')
 
     def _left(self):
         return str(self.controller.move('left'))
