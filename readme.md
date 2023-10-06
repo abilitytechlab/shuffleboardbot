@@ -1,7 +1,9 @@
 # SjoelFlask
+
 Simple web application to control a sjoel robot with serial commands.
 
 ## Installation
+
 1. `pip install -r requirements.txt`
 2. ```
    python main.py [-h] [--config CONFIG] [--interface INTERFACE] [--port PORT] [--serial SERIAL] [--baud BAUD] [--debug] [--mock]
@@ -20,8 +22,10 @@ Simple web application to control a sjoel robot with serial commands.
 3. Open `http://localhost:5000` in your browser
 
 ## Configuration
-We use a TOML file for the configuration of the device parameters. 
+
+We use a TOML file for the configuration of the device parameters.
 The default configuration is as follows:
+
 ```toml
 port = "COM3"                   # Serial port to connect to
 baudrate = 9600                 # Baudrate of the serial connection

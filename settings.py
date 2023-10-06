@@ -1,5 +1,6 @@
 import toml
 
+
 class DeviceSettings:
     def __init__(self,
                  port: str,
@@ -49,6 +50,7 @@ class DeviceSettings:
 
     def __str__(self):
         return self.to_toml()
+
 
 class HostingSettings:
     def __init__(self,

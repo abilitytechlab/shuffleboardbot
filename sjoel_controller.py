@@ -1,4 +1,3 @@
-import serial
 import time
 from typing import Literal
 

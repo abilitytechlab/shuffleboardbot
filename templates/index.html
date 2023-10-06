@@ -55,7 +55,7 @@
 <script>
     const logs = []
 
-    async function left(){
+    async function left() {
         const response = await fetch('left')
         logs.unshift((await response.text()))
         update()

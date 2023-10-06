@@ -6,7 +6,6 @@ from communicator.communicator_mock import MockCommunicator
 from server.sjoel_server_socket import SjoelServerSocket
 from settings import HostingSettings
 from sjoel_controller import SjoelController
-from server.sjoel_server_simple import SjoelServerSimple
 
 
 def parse_hosting_settings() -> HostingSettings:
