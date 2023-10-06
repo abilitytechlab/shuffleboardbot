@@ -2,11 +2,16 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Sjoel robot</title>
     <style>
+        body {
+            margin: 0;
+        }
+
         #container {
             display: flex;
-            height: 80vh;
+            width: 100vw;
+            height: 100vh;
         }
 
         #container > * {
@@ -21,8 +26,9 @@
         }
 
         #logs {
-            height: 20vh;
             overflow: hidden;
+            height: 100%;
+            max-width: 10%;
         }
     </style>
 
@@ -45,10 +51,15 @@
             socket.emit('fire')
         }
 
-        socket.on('update', function (data) {
-            logs.push(data)
-            document.getElementById('logs').innerHTML = logs.reverse().join('<br/>')
-        })
+        function update(data) {
+            logs.unshift(data)
+            console.log(logs)
+            document.getElementById('logs').innerHTML = logs.join('<br/>')
+        }
+
+        socket.on('position', update)
+        socket.on('fire', update)
+        socket.on('error', update)
     </script>
 </head>
 <body>
@@ -68,7 +79,7 @@
             Rechts
         </button>
     </div>
+    <div id="logs"></div>
 </div>
-<div id="logs"></div>
 </body>
 </html>

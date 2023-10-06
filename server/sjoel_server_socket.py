@@ -21,15 +21,22 @@ class SjoelServerSocket(SjoelServerAbc):
     def _register_socketio_handlers(self):
         @self.socketio.on('left')
         def left():
-            self.controller.move('left')
+            pos = self.controller.move('left')
+            self.socketio.emit('position', pos)
 
         @self.socketio.on('right')
         def right():
-            self.controller.move('right')
+            pos = self.controller.move('right')
+            self.socketio.emit('position', pos)
 
         @self.socketio.on('fire')
         def fire():
-            self.controller.fire()
+            try:
+                self.socketio.emit('fire', 'begin fire')
+                self.controller.fire()
+                self.socketio.emit('fire', 'end fire')
+            except RuntimeError as e:
+                self.socketio.emit('error', str(e))
 
         @self.socketio.on('connect')
         def connect():

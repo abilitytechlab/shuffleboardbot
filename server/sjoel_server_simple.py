@@ -21,7 +21,10 @@ class SjoelServerSimple(SjoelServerAbc):
         return str(self.controller.move('right'))
 
     def _fire(self):
-        return str(self.controller.fire())
+        try:
+            return str(self.controller.fire())
+        except RuntimeError as e:
+            return str(e)
 
     def _center(self):
         return str(self.controller.center())

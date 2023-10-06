@@ -40,10 +40,18 @@ class SjoelController:
         self.stepper_pos = helpers.clamp_range(pos, self.settings.stepper_range)
         self.communicator.write_command(f"{self.settings.stepper_name} {self.settings.stepper_axis}{self.stepper_pos}")
 
+    def _can_fire(self):
+        """
+        Check if the sjoelbak can fire
+        """
+        return self.fire_servo_angle == self.settings.fire_servo_range[0]
+
     def fire(self):
         """
         Fire the sjoelbak
         """
+        if not self._can_fire():
+            raise RuntimeError("Cannot fire while firing")
         self._set_fire_servo_angle(self.settings.fire_servo_range[1])
         time.sleep(self.settings.fire_delay)
         self._set_fire_servo_angle(self.settings.fire_servo_range[0])
