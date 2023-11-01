@@ -14,7 +14,9 @@ class SerialCommunicator(CommunicatorAbc):
         self.baud = baud
 
         self.ser = serial.Serial(self.port, self.baud)
-        self.ser.open()
+
+        if not self.ser.is_open:
+            self.ser.open()
 
     def __del__(self):
         """
