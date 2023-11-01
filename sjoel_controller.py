@@ -29,7 +29,7 @@ class SjoelController:
         :param angle: The angle to set the servo to
         """
         self.fire_servo_angle = angle
-        self.communicator.write_command(f"M280 {self.settings.fire_servo_name} {self.fire_servo_angle}")
+        self.communicator.write_command(f"M280 {self.settings.fire_servo_name} S{self.fire_servo_angle}")
 
     def _set_stepper_pos(self, pos: int):
         """
