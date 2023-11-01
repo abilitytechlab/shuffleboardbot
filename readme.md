@@ -33,7 +33,6 @@ fire_servo_range = [120, 180]   # Range of the servo in degrees, first position 
 stepper_range = [0, 100]        # Range of the stepper in steps, default position is center
 fire_delay = 1.0                # How long to keep the firing servo in the second position
 fire_servo_name = "P0"          # Name of the servo that fires the puck
-stepper_name = "G0"             # Name of the stepper that moves laterally
 stepper_axis = "X"              # Axis of the stepper
 stepper_step = 10               # How many steps to move the stepper per command
 ```
@@ -50,10 +49,10 @@ When the servo is fired, the software will send the following commands to the ro
 
 When the stepper is moved, the software will send the following commands to the robot:
 
-1. `[stepper_name] [stepper_axis][position]`, e.g. `G0 X10`
+1. `G0 [stepper_axis][position]`, e.g. `G0 X10`
 
 ## Todo
 
-- [ ] Apparently `G0` is the command for moving the stepper, I assumed it was the stepper name, needs to be removed.
+- [x] Apparently `G0` is the command for moving the stepper, I assumed it was the stepper name, needs to be removed.
 - [ ] Add a way to configure the commands that are sent
 - [ ] Read position before moving stepper

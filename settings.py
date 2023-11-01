@@ -9,7 +9,6 @@ class DeviceSettings:
                  stepper_range: tuple[int, int],
                  fire_delay: float,
                  fire_servo_name: str,
-                 stepper_name: str,
                  stepper_axis: str,
                  stepper_step: int):
         """
@@ -20,7 +19,6 @@ class DeviceSettings:
         :param stepper_range: The range of the stepper motor (min, max)
         :param fire_delay: How long to keep the firing servo on the second angle
         :param fire_servo_name: Internal name of the firing servo
-        :param stepper_name: Internal name of the stepper motor
         :param stepper_axis: The axis to move the stepper motor on
         :param stepper_step: The amount of steps the stepper motor moves
         """
@@ -30,7 +28,6 @@ class DeviceSettings:
         self.stepper_range = stepper_range
         self.fire_delay = fire_delay
         self.fire_servo_name = fire_servo_name
-        self.stepper_name = stepper_name
         self.stepper_axis = stepper_axis
         self.stepper_step = stepper_step
 

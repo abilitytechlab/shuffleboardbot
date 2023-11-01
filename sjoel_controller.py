@@ -37,7 +37,7 @@ class SjoelController:
         :param pos: The position to set the stepper motor to
         """
         self.stepper_pos = helpers.clamp_range(pos, self.settings.stepper_range)
-        self.communicator.write_command(f"{self.settings.stepper_name} {self.settings.stepper_axis}{self.stepper_pos}")
+        self.communicator.write_command(f"G0 {self.settings.stepper_axis}{self.stepper_pos}")
 
     def _can_fire(self):
         """
