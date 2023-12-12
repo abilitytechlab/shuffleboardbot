@@ -23,6 +23,10 @@ class SjoelController:
         self._set_fire_servo_angle(self.fire_servo_angle)
         self.center()
 
+    def _set_stepper_active(self, active: bool):
+        command = "M17" if active else "M18"
+        self.communicator.write_command(command)
+
     def _set_fire_servo_angle(self, angle: int):
         """
         Set the angle of the firing servo
@@ -36,8 +40,14 @@ class SjoelController:
         Set the position of the stepper motor
         :param pos: The position to set the stepper motor to
         """
+        unclamped_pos = self.stepper_pos
         self.stepper_pos = helpers.clamp_range(pos, self.settings.stepper_range)
-        self.communicator.write_command(f"G0 {self.settings.stepper_axis}{self.stepper_pos}")
+        if self.stepper_pos == unclamped_pos:
+            return
+        
+        self._set_stepper_active(True)
+        self.communicator.write_command(f"G0 {self.settings.stepper_axis}{self.stepper_pos} F100000")
+        self._set_stepper_active(False)
 
     def _can_fire(self):
         """
@@ -89,5 +99,9 @@ class SjoelController:
         """
         Center the stepper motor
         """
-        self.move_to((self.settings.stepper_range[1] - self.settings.stepper_range[0]) // 2)
+        # self.move_to((self.settings.stepper_range[1] - self.settings.stepper_range[0]) // 2)
+        self._set_stepper_active(True)
+        self.communicator.write_command("G28")
+        self._set_stepper_active(False)
+        self.stepper_pos = 0
         return self.stepper_pos
