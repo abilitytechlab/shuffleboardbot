@@ -21,7 +21,13 @@ class SjoelController:
 
         self.communicator = communicator
         self._set_fire_servo_angle(self.fire_servo_angle)
-        self.center()
+        #self.center()
+        self.stepper_pos = 0 # anders error
+        # turn fan on = rotate motor  (moet eigenlijk niet in init, want als robot wil schieten moet hij beginnen met draaien. na schieten moet hij weer uit.) (kan nog niet testen want relay kapot)
+        self.communicator.write_command("M106 S255") 
+
+        self.communicator.write_command("M92 X1000") # steps per mm
+
 
     def _set_stepper_active(self, active: bool):
         command = "M17" if active else "M18"
@@ -35,6 +41,7 @@ class SjoelController:
         self.fire_servo_angle = angle
         self.communicator.write_command(f"M280 {self.settings.fire_servo_name} S{self.fire_servo_angle}")
 
+
     def _set_stepper_pos(self, pos: int):
         """
         Set the position of the stepper motor
@@ -46,7 +53,7 @@ class SjoelController:
             return
         
         self._set_stepper_active(True)
-        self.communicator.write_command(f"G0 {self.settings.stepper_axis}{self.stepper_pos} F100000")
+        self.communicator.write_command(f"G0 {self.settings.stepper_axis}{self.stepper_pos} F2000") # speed per step (blijf sowieso onder)
         self._set_stepper_active(False)
 
     def _can_fire(self):
