@@ -21,10 +21,8 @@ class SjoelController:
 
         self.communicator = communicator
         self._set_fire_servo_angle(self.fire_servo_angle)
-        #self.center()
-        self.stepper_pos = 0 # Initialize stepper position
-
-        self.communicator.write_command("M92 X1000") # steps per mm
+        self.stepper_pos = 0  # Initialize stepper position
+        self.communicator.write_command("M92 X1000")  # steps per mm
 
 
     def _set_stepper_active(self, active: bool):
