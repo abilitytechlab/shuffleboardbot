@@ -22,7 +22,7 @@ class SjoelController:
         self.communicator = communicator
         self._set_fire_servo_angle(self.fire_servo_angle)
         #self.center()
-        self.stepper_pos = 0 # anders error
+        self.stepper_pos = 0 # Initialize stepper position
 
         self.communicator.write_command("M92 X1000") # steps per mm
 
@@ -49,9 +49,10 @@ class SjoelController:
         self.stepper_pos = helpers.clamp_range(pos, self.settings.stepper_range)
         if self.stepper_pos == unclamped_pos:
             return
-        
+
         self._set_stepper_active(True)
-        self.communicator.write_command(f"G0 {self.settings.stepper_axis}{self.stepper_pos} F2000") # speed per step (blijf sowieso onder)
+        # G0 is the move command, F is the speed
+        self.communicator.write_command(f"G0 {self.settings.stepper_axis}{self.stepper_pos} F2000")
         self._set_stepper_active(False)
 
     def _can_fire(self):
@@ -62,11 +63,11 @@ class SjoelController:
 
     def fire(self):
         """
-        Fire the sjoelbak
+        Fire the sjoelbak, first turns on the fan
+        which turns on the firing motors via a relay
         """
         if not self._can_fire():
             raise RuntimeError("Cannot fire while firing")
-        # turns fan on and relay on
         self.communicator.write_command("M106 S255")
         self._set_fire_servo_angle(self.settings.fire_servo_range[1])
         time.sleep(self.settings.fire_delay)
