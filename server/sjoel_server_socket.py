@@ -3,7 +3,6 @@ from flask import Flask, render_template, Response
 from flask_socketio import SocketIO
 
 from server.sjoel_server_abc import SjoelServerAbc
-from settings import HostingSettings
 from sjoel_controller import SjoelController
 
 
@@ -19,19 +18,20 @@ def generate_frames(camera_index: int):
 
 
 class SjoelServerSocket(SjoelServerAbc):
-    def __init__(self, settings: HostingSettings, controller: SjoelController):
-        super().__init__(settings, controller)
+    def __init__(self, controller: SjoelController):
+        super().__init__(controller)
         self.app = Flask('Socket sjoel server', )
         self.socketio = SocketIO(self.app)
         self.app.route('/')(lambda: render_template('socket.html'))
-        self.app.route('/video_feed/<id>')(self.video_feed)
+        self.app.route('/video_feed/<camera_id>')(self.video_feed)
 
-    def run(self):
+    def init(self):
         self._register_socketio_handlers()
-        self.socketio.run(self.app, host=self.settings.interface, port=self.settings.port, debug=self.settings.debug, allow_unsafe_werkzeug=True)
+        return self.app
 
-    def video_feed(self, id: str):
-        return Response(generate_frames(int(id)), mimetype='multipart/x-mixed-replace; boundary=frame')
+    @staticmethod
+    def video_feed(camera_id: str):
+        return Response(generate_frames(int(camera_id)), mimetype='multipart/x-mixed-replace; boundary=frame')
 
     def _register_socketio_handlers(self):
         @self.socketio.on('left')

@@ -1,13 +1,12 @@
 from flask import Flask, render_template
 
 from server.sjoel_server_abc import SjoelServerAbc
-from settings import HostingSettings
 from sjoel_controller import SjoelController
 
 
 class SjoelServerSimple(SjoelServerAbc):
-    def __init__(self, settings: HostingSettings, controller: SjoelController):
-        super().__init__(settings, controller)
+    def __init__(self, controller: SjoelController):
+        super().__init__(controller)
         self.app = Flask('Simple sjoel server')
         self.app.route('/')(lambda: render_template('index.html'))
         self.app.route('/left')(self._left)
@@ -29,5 +28,5 @@ class SjoelServerSimple(SjoelServerAbc):
     def _center(self):
         return str(self.controller.center())
 
-    def run(self):
-        self.app.run(host=self.settings.interface, port=self.settings.port, debug=self.settings.debug)
+    def init(self):
+        return self.app

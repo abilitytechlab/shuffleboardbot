@@ -1,16 +1,14 @@
 from abc import ABC, abstractmethod
 
-from settings import HostingSettings
 from sjoel_controller import SjoelController
 
 
 class SjoelServerAbc(ABC):
-    def __init__(self, settings: HostingSettings, controller: SjoelController):
-        self.settings = settings
+    def __init__(self, controller: SjoelController):
         self.controller = controller
 
     @abstractmethod
-    def run(self):
+    def init(self):
         """
         Starts the server
         """

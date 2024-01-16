@@ -13,6 +13,7 @@ class SjoelController:
         A class that controls a sjoelbak
         :argument settings: The settings of the sjoelbak
         """
+        self.stepper_pos = None
         self.settings = settings
         self.fire_servo_angle = self.settings.fire_servo_range[0]
 

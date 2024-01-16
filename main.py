@@ -23,35 +23,25 @@ def parse_hosting_settings() -> HostingSettings:
     return HostingSettings(args.config, args.interface, args.port, args.debug, args.mock, args.serial, args.baud)
 
 
-if __name__ == '__main__':
-    # load settings
-    hosting_settings = parse_hosting_settings()
+def create_app(config: HostingSettings | None = None):
+    # Load hosting settings if not provided
+    if config is None:
+        try:
+            with open('config.toml') as f:
+                config = HostingSettings.from_toml(f.read())
+        except FileNotFoundError:
+            print("Hosting settings not found")
+            exit(1)
 
-    if hosting_settings.debug:
-        print("Debug logging enabled")
-        print("Hosting settings:")
-        print(hosting_settings)
-
+    # Load device settings
     try:
-        device_settings = hosting_settings.get_device_settings()
+        device_settings = config.get_device_settings()
     except FileNotFoundError:
-        print("Config file not found")
+        print("Device settings not found")
         exit(1)
 
-    if hosting_settings.debug:
-        print("Device settings:")
-        print(device_settings)
-
-    # process overrides
-    if hosting_settings.serial is not None:
-        device_settings.serial_port = hosting_settings.serial
-
-    if hosting_settings.baud is not None:
-        device_settings.baud_rate = hosting_settings.baud
-
-    # create controller
     communicator = None
-    if hosting_settings.mock:
+    if config.mock:
         communicator = MockCommunicator()
 
     try:
@@ -60,5 +50,14 @@ if __name__ == '__main__':
         print(e)
         exit(1)
 
-    web = SjoelServerSocket(hosting_settings, controller)
-    web.run()
+    return SjoelServerSocket(controller).init()
+
+
+if __name__ == '__main__':
+    # load settings
+    hosting_settings = parse_hosting_settings()
+    web = create_app(hosting_settings)
+    web.run(
+        host=hosting_settings.interface,
+        port=hosting_settings.port,
+        debug=hosting_settings.debug)
