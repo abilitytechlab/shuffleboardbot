@@ -23,8 +23,6 @@ class SjoelController:
         self._set_fire_servo_angle(self.fire_servo_angle)
         #self.center()
         self.stepper_pos = 0 # anders error
-        # turn fan on = rotate motor  (moet eigenlijk niet in init, want als robot wil schieten moet hij beginnen met draaien. na schieten moet hij weer uit.) (kan nog niet testen want relay kapot)
-        self.communicator.write_command("M106 S255") 
 
         self.communicator.write_command("M92 X1000") # steps per mm
 
@@ -68,6 +66,8 @@ class SjoelController:
         """
         if not self._can_fire():
             raise RuntimeError("Cannot fire while firing")
+        # turns fan on and relay on
+        self.communicator.write_command("M106 S255")
         self._set_fire_servo_angle(self.settings.fire_servo_range[1])
         time.sleep(self.settings.fire_delay)
         self._set_fire_servo_angle(self.settings.fire_servo_range[0])
