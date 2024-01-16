@@ -8,8 +8,24 @@
             margin: 0;
         }
 
+        #video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+        }
+
         #container {
-            display: flex;
+            display: grid;
+            grid-template-areas:
+                "fire fire fire fire fire"
+                "left . . . right"
+                "left . . . right"
+                "left . . . right"
+                "left . . . right"
+                "left . . . right";
             width: 100vw;
             height: 100vh;
         }
@@ -17,6 +33,7 @@
         #container > * {
             width: 100%;
             height: 100%;
+            opacity: 0.6;
         }
 
         button {
@@ -56,6 +73,7 @@
             console.log(logs)
             document.getElementById('logs').innerHTML = logs.join('<br/>')
         }
+        socket.emit('image')
 
         socket.on('position', update)
         socket.on('fire', update)
@@ -64,22 +82,24 @@
 </head>
 <body>
 <div id="container">
-    <div>
+    <div style="grid-area: left">
         <button onclick="left()">
             Links
         </button>
     </div>
-    <div>
+    <div style="grid-area: fire">
         <button onclick="fire()">
             Schieten
         </button>
     </div>
-    <div>
+    <div style="grid-area: right">
         <button onclick="right()">
             Rechts
         </button>
     </div>
-    <div id="logs"></div>
 </div>
+    <div id="logs"></div>
+
+<img src="{{ url_for('video_feed', id=0) }}" id="video">
 </body>
 </html>
