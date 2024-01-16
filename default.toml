@@ -1,8 +1,8 @@
-port = "COM7"
+port = "COM8"
 baudrate = 250000
 fire_servo_range = [90, 130] #90 is onder de buis
 stepper_range = [0,300] # tweak this not sure about the range, was not used in old code
-fire_delay = 1.0
+fire_delay = 2.0
 fire_servo_name = "P0"
 stepper_axis = "X"
 stepper_step = 5 # 
