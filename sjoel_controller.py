@@ -72,6 +72,7 @@ class SjoelController:
         self._set_fire_servo_angle(self.settings.fire_servo_range[1])
         time.sleep(self.settings.fire_delay)
         self._set_fire_servo_angle(self.settings.fire_servo_range[0])
+        self.communicator.write_command("M106 S0")
 
     def move_raw(self, steps: int) -> int:
         """
