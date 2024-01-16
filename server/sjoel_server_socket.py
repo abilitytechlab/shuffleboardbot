@@ -2,9 +2,8 @@ import cv2
 from flask import Flask, render_template, Response
 from flask_socketio import SocketIO
 
-from controller.sjoel_controller_base import MovementDirection
+from controller.sjoel_controller_base import MovementDirection, SjoelControllerBase
 from server.sjoel_server_abc import SjoelServerAbc
-from controller.sjoel_controller_gcode import SjoelControllerGcode
 
 
 def generate_frames(camera_index: int):
@@ -19,7 +18,7 @@ def generate_frames(camera_index: int):
 
 
 class SjoelServerSocket(SjoelServerAbc):
-    def __init__(self, controller: SjoelControllerGcode):
+    def __init__(self, controller: SjoelControllerBase):
         super().__init__(controller)
         self.app = Flask('Socket sjoel server', )
         self.socketio = SocketIO(self.app)

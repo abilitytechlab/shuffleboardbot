@@ -1,12 +1,11 @@
 from flask import Flask, render_template
 
-from controller.sjoel_controller_base import MovementDirection
+from controller.sjoel_controller_base import MovementDirection, SjoelControllerBase
 from server.sjoel_server_abc import SjoelServerAbc
-from controller.sjoel_controller_gcode import SjoelControllerGcode
 
 
 class SjoelServerSimple(SjoelServerAbc):
-    def __init__(self, controller: SjoelControllerGcode):
+    def __init__(self, controller: SjoelControllerBase):
         super().__init__(controller)
         self.app = Flask('Simple sjoel server')
         self.app.route('/')(lambda: render_template('index.html'))
