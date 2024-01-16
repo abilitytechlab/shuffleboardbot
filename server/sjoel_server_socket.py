@@ -2,8 +2,9 @@ import cv2
 from flask import Flask, render_template, Response
 from flask_socketio import SocketIO
 
+from controller.sjoel_controller_base import MovementDirection
 from server.sjoel_server_abc import SjoelServerAbc
-from sjoel_controller import SjoelController
+from controller.sjoel_controller_gcode import SjoelControllerGcode
 
 
 def generate_frames(camera_index: int):
@@ -18,7 +19,7 @@ def generate_frames(camera_index: int):
 
 
 class SjoelServerSocket(SjoelServerAbc):
-    def __init__(self, controller: SjoelController):
+    def __init__(self, controller: SjoelControllerGcode):
         super().__init__(controller)
         self.app = Flask('Socket sjoel server', )
         self.socketio = SocketIO(self.app)
@@ -36,12 +37,12 @@ class SjoelServerSocket(SjoelServerAbc):
     def _register_socketio_handlers(self):
         @self.socketio.on('left')
         def left():
-            pos = self.controller.move('left')
+            pos = self.controller.move(MovementDirection.LEFT)
             self.socketio.emit('position', pos)
 
         @self.socketio.on('right')
         def right():
-            pos = self.controller.move('right')
+            pos = self.controller.move(MovementDirection.RIGHT)
             self.socketio.emit('position', pos)
 
         @self.socketio.on('fire')

@@ -5,7 +5,7 @@ from serial import SerialException
 from communicator.communicator_mock import MockCommunicator
 from server.sjoel_server_socket import SjoelServerSocket
 from settings import HostingSettings
-from sjoel_controller import SjoelController
+from controller.sjoel_controller_gcode import SjoelControllerGcode
 
 
 def parse_hosting_settings() -> HostingSettings:
@@ -45,7 +45,7 @@ def create_app(config: HostingSettings | None = None):
         communicator = MockCommunicator()
 
     try:
-        controller = SjoelController(device_settings, communicator)
+        controller = SjoelControllerGcode(device_settings, communicator)
     except SerialException as e:
         print(e)
         exit(1)

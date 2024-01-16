@@ -1,10 +1,10 @@
 from abc import ABC, abstractmethod
 
-from sjoel_controller import SjoelController
+from controller.sjoel_controller_gcode import SjoelControllerGcode
 
 
 class SjoelServerAbc(ABC):
-    def __init__(self, controller: SjoelController):
+    def __init__(self, controller: SjoelControllerGcode):
         self.controller = controller
 
     @abstractmethod

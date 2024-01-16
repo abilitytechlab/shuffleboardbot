@@ -1,11 +1,12 @@
 from flask import Flask, render_template
 
+from controller.sjoel_controller_base import MovementDirection
 from server.sjoel_server_abc import SjoelServerAbc
-from sjoel_controller import SjoelController
+from controller.sjoel_controller_gcode import SjoelControllerGcode
 
 
 class SjoelServerSimple(SjoelServerAbc):
-    def __init__(self, controller: SjoelController):
+    def __init__(self, controller: SjoelControllerGcode):
         super().__init__(controller)
         self.app = Flask('Simple sjoel server')
         self.app.route('/')(lambda: render_template('index.html'))
@@ -14,19 +15,16 @@ class SjoelServerSimple(SjoelServerAbc):
         self.app.route('/fire')(self._fire)
 
     def _left(self):
-        return str(self.controller.move('left'))
+        return str(self.controller.move(MovementDirection.LEFT))
 
     def _right(self):
-        return str(self.controller.move('right'))
+        return str(self.controller.move(MovementDirection.RIGHT))
 
     def _fire(self):
         try:
             return str(self.controller.fire())
         except RuntimeError as e:
             return str(e)
-
-    def _center(self):
-        return str(self.controller.center())
 
     def init(self):
         return self.app

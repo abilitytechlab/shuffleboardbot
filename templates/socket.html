@@ -41,12 +41,6 @@
             width: 100%;
             height: 100%;
         }
-
-        #logs {
-            overflow: hidden;
-            height: 100%;
-            max-width: 10%;
-        }
     </style>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"
@@ -69,11 +63,8 @@
         }
 
         function update(data) {
-            logs.unshift(data)
-            console.log(logs)
-            document.getElementById('logs').innerHTML = logs.join('<br/>')
+            console.log(data)
         }
-        socket.emit('image')
 
         socket.on('position', update)
         socket.on('fire', update)
@@ -98,8 +89,6 @@
         </button>
     </div>
 </div>
-    <div id="logs"></div>
-
 <img src="{{ url_for('video_feed', camera_id=0) }}" id="video" alt="Livestream">
 </body>
 </html>
