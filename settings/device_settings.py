@@ -6,11 +6,13 @@ class DeviceSettings:
                  port: str,
                  baudrate: int,
                  fire_servo_range: tuple[int, int],
-                 stepper_range: tuple[int, int],
                  fire_delay: float,
                  fire_servo_name: str,
                  stepper_axis: str,
-                 stepper_step: int):
+                 stepper_step: int,
+                 stepper_range: tuple[int, int],
+                 stepper_steps_per_mm: int,
+                 stepper_rate: int, ):
         """
         Settings for the sjoelbak
         :param port: The COM port the sjoelbak is connected to
@@ -21,15 +23,21 @@ class DeviceSettings:
         :param fire_servo_name: Internal name of the firing servo
         :param stepper_axis: The axis to move the stepper motor on
         :param stepper_step: The amount of steps the stepper motor moves
+        :param stepper_steps_per_mm: The amount of steps the stepper moves per mm
+        :param stepper_rate: The rate at which the stepper motor moves
         """
         self.port = port
         self.baudrate = baudrate
+
         self.fire_servo_range = fire_servo_range
-        self.stepper_range = stepper_range
         self.fire_delay = fire_delay
         self.fire_servo_name = fire_servo_name
+
         self.stepper_axis = stepper_axis
         self.stepper_step = stepper_step
+        self.stepper_range = stepper_range
+        self.stepper_steps_per_mm = stepper_steps_per_mm
+        self.stepper_rate = stepper_rate
 
     def to_toml(self):
         """

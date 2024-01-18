@@ -1,6 +1,6 @@
 import toml
 
-from device_settings import DeviceSettings
+from settings.device_settings import DeviceSettings
 
 
 class HostingSettings:

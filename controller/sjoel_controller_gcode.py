@@ -23,7 +23,9 @@ class SjoelControllerGcode(SjoelControllerBase):
         # Set servo to initial position
         self.fire_servo_angle = self.settings.fire_servo_range[0]
         self._set_fire_servo_angle(self.fire_servo_angle)
-        self.communicator.write_command("M92 X1000")  # steps per mm
+
+        # Set steps per mm
+        self.communicator.write_command(f"M92 {self.settings.stepper_axis}{self.settings.stepper_steps_per_mm}")
 
         # Home the stepper
         self._center()
@@ -35,11 +37,11 @@ class SjoelControllerGcode(SjoelControllerBase):
         """
         if not self._can_fire():
             raise RuntimeError("Cannot fire while firing")
-        self.communicator.write_command("M106 S255")
+        self._set_fan_speed(255)
         self._set_fire_servo_angle(self.settings.fire_servo_range[1])
         time.sleep(self.settings.fire_delay)
         self._set_fire_servo_angle(self.settings.fire_servo_range[0])
-        self.communicator.write_command("M106 S0")
+        self._set_fan_speed(0)
 
     def move(self, direction: MovementDirection):
         """
@@ -69,14 +71,20 @@ class SjoelControllerGcode(SjoelControllerBase):
         self.fire_servo_angle = angle
         self.communicator.write_command(f"M280 {self.settings.fire_servo_name} S{self.fire_servo_angle}")
 
+    def _set_fan_speed(self, speed: int):
+        """
+        Set the speed of the fan
+        :param speed: The speed to set the fan to
+        """
+        self.communicator.write_command(f"M106 S{speed}")
+
     def _move_raw(self, steps: int):
         """
         Move the stepper motor a certain amount of steps from the current position
         :param steps: The amount of steps to move the stepper motor
         """
         self._set_stepper_active(True)
-        # G0 is the move command, F is the speed
-        self.communicator.write_command(f"G0 {self.settings.stepper_axis}{steps} F2000")
+        self.communicator.write_command(f"G0 {self.settings.stepper_axis}{steps} F{self.settings.stepper_rate}")
         self._set_stepper_active(False)
 
     def _can_fire(self):
