@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="nl">
 <head>
     <meta charset="UTF-8">
     <title>Sjoel robot</title>
@@ -47,18 +47,26 @@
             integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA=="
             crossorigin="anonymous"></script>
     <script type="text/javascript" charset="utf-8">
-        const socket = io()
+        const socket = io();
+        let intervalId;
 
-        async function left() {
-            socket.emit('left')
+        function startEmitting(eventType) {
+            const closure = () => {
+                emit(eventType)
+            }
+
+            closure()
+            intervalId = setInterval(() => {
+                closure()
+            }, 1000)
         }
 
-        async function right() {
-            socket.emit('right')
+        function emit(eventType) {
+            socket.emit(eventType)
         }
 
-        async function fire() {
-            socket.emit('fire')
+        function stopEmitting() {
+            clearInterval(intervalId)
         }
 
         function update(data) {
@@ -67,23 +75,32 @@
 
         socket.on('position', update)
         socket.on('fire', update)
-        socket.on('error', update)
+        socket.on('error', data => console.error(data))
     </script>
 </head>
 <body>
 <div id="container">
     <div style="grid-area: left">
-        <button onclick="left()">
+        <button
+                onmouseover="startEmitting('left')"
+                onmouseout="stopEmitting()"
+                onclick="emit('left')">
             Links
         </button>
     </div>
     <div style="grid-area: fire">
-        <button onclick="fire()">
+        <button
+                onmouseover="startEmitting('fire')"
+                onmouseout="stopEmitting()"
+                onclick="emit('fire')">
             Schieten
         </button>
     </div>
     <div style="grid-area: right">
-        <button onclick="right()">
+        <button
+                onmouseover="startEmitting('right')"
+                onmouseout="stopEmitting()"
+                onclick="emit('right')">
             Rechts
         </button>
     </div>
