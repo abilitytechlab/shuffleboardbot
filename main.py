@@ -3,9 +3,9 @@ import argparse
 from serial import SerialException
 
 from communicator.communicator_mock import MockCommunicator
-from server.sjoel_server_socket import SjoelServerSocket
-from settings import HostingSettings
 from controller.sjoel_controller_gcode import SjoelControllerGcode
+from hosting_settings import HostingSettings
+from server.sjoel_server_socket import SjoelServerSocket
 
 
 def parse_hosting_settings() -> HostingSettings:

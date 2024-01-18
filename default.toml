@@ -5,6 +5,6 @@ stepper_range = [0,300] # tweak this not sure about the range, was not used in o
 fire_delay = 2.0
 fire_servo_name = "P0"
 stepper_axis = "X"
-stepper_step = 5 # 
+stepper_step = 5
 
 #slp pin (pin  via gnd 5 v --> gaat triver uit)

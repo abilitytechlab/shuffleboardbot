@@ -3,7 +3,7 @@ import time
 from communicator.communicator_abc import CommunicatorAbc
 from communicator.communicator_serial import SerialCommunicator
 from controller.sjoel_controller_base import SjoelControllerBase, MovementDirection
-from settings import DeviceSettings
+from device_settings import DeviceSettings
 
 
 class SjoelControllerGcode(SjoelControllerBase):
@@ -23,7 +23,7 @@ class SjoelControllerGcode(SjoelControllerBase):
         # Set servo to initial position
         self.fire_servo_angle = self.settings.fire_servo_range[0]
         self._set_fire_servo_angle(self.fire_servo_angle)
-        self.communicator.write_command("M92 X1000") # steps per mm
+        self.communicator.write_command("M92 X1000")  # steps per mm
 
         # Home the stepper
         self._center()
