@@ -23,19 +23,23 @@ class SjoelControllerGcode(SjoelControllerBase):
         # Set servo to initial position
         self.fire_servo_angle = self.settings.fire_servo_range[0]
         self._set_fire_servo_angle(self.fire_servo_angle)
+        self.communicator.write_command("M92 X1000") # steps per mm
 
         # Home the stepper
         self._center()
 
     def fire(self):
         """
-        Fire the sjoelbak
+        Fire the sjoelbak, first turns on the fan
+        which turns on the firing motors via a relay
         """
         if not self._can_fire():
             raise RuntimeError("Cannot fire while firing")
+        self.communicator.write_command("M106 S255")
         self._set_fire_servo_angle(self.settings.fire_servo_range[1])
         time.sleep(self.settings.fire_delay)
         self._set_fire_servo_angle(self.settings.fire_servo_range[0])
+        self.communicator.write_command("M106 S0")
 
     def move(self, direction: MovementDirection):
         """
@@ -71,7 +75,8 @@ class SjoelControllerGcode(SjoelControllerBase):
         :param steps: The amount of steps to move the stepper motor
         """
         self._set_stepper_active(True)
-        self.communicator.write_command(f"G0 {self.settings.stepper_axis}{steps} F100000")
+        # G0 is the move command, F is the speed
+        self.communicator.write_command(f"G0 {self.settings.stepper_axis}{steps} F2000")
         self._set_stepper_active(False)
 
     def _can_fire(self):
