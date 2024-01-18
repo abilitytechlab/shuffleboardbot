@@ -3,8 +3,12 @@ import argparse
 from serial import SerialException
 
 from communicator.communicator_mock import MockCommunicator
+from communicator.communicator_raw import CommunicatorRaw
+from communicator.communicator_serial import SerialCommunicator
 from controller.sjoel_controller_gcode import SjoelControllerGcode
+from controller.sjoel_controller_raw import SjoelControllerRaw
 from server.sjoel_server_socket import SjoelServerSocket
+from settings.device_settings import CommunicatorType
 from settings.hosting_settings import HostingSettings
 
 
@@ -40,16 +44,21 @@ def create_app(config: HostingSettings | None = None):
         print("Device settings not found")
         exit(1)
 
-    communicator = None
+    # Create controller
     if config.mock:
         communicator = MockCommunicator()
-
-    try:
         controller = SjoelControllerGcode(device_settings, communicator)
-    except SerialException as e:
-        print(e)
-        exit(1)
+    else:
+        if device_settings.communicator == CommunicatorType.GCODE:
+            communicator = SerialCommunicator(device_settings.gcode.port, device_settings.gcode.baudrate)
+            controller = SjoelControllerGcode(device_settings, communicator)
+        elif device_settings.communicator == CommunicatorType.RAW:
+            communicator = CommunicatorRaw()
+            controller = SjoelControllerRaw(device_settings, communicator)
+        else:
+            raise ValueError("Invalid communicator type")
 
+    # Create server
     return SjoelServerSocket(controller).init()
 
 

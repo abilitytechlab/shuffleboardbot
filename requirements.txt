@@ -3,3 +3,5 @@ flask~=3.0.0
 toml~=0.10.2
 Flask-SocketIO~=5.3.6
 opencv-python~=4.9.0.80
+pydantic~=2.5.3
+pigpio~=1.78

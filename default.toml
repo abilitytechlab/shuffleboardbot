@@ -1,14 +1,21 @@
-port = "COM8"
-baudrate = 250000
-
 fire_servo_range = [90, 130] #90 is onder de buis
 fire_delay = 2.0
-fire_servo_name = "P0"
-
 stepper_range = [0, 300] # tweak this not sure about the range, was not used in old code
+communicator = "gcode"
+
+[gcode]
+port = "COM8"
+baudrate = 250000
+fire_servo_name = "P0"
 stepper_axis = "X"
 stepper_step = 5
 stepper_steps_per_mm = 1000
 stepper_rate = 2000
+
+[raw]
+servo_pin = 0
+stepper_enable_pin = 1
+stepper_direction_pin = 2
+stepper_step_pin = 3
 
 #slp pin (pin  via gnd 5 v --> gaat triver uit)
