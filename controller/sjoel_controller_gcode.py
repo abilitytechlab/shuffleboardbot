@@ -3,7 +3,7 @@ import time
 from communicator.communicator_abc import CommunicatorAbc
 from communicator.communicator_serial import SerialCommunicator
 from controller.sjoel_controller_base import SjoelControllerBase, MovementDirection
-from device_settings import DeviceSettings
+from settings.device_settings import DeviceSettings
 
 
 class SjoelControllerGcode(SjoelControllerBase):

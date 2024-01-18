@@ -2,7 +2,7 @@ import enum
 from abc import ABC, abstractmethod
 
 from communicator.communicator_abc import CommunicatorAbc
-from device_settings import DeviceSettings
+from settings.device_settings import DeviceSettings
 
 
 class MovementDirection(enum.Enum):
