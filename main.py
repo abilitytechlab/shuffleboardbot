@@ -46,14 +46,17 @@ def create_app(config: HostingSettings | None = None):
 
     # Create controller
     if config.mock:
+        print("Mock communicator enabled")
         communicator = MockCommunicator()
         controller = SjoelControllerGcode(device_settings, communicator)
     else:
         if device_settings.communicator == CommunicatorType.GCODE:
+            print("Gcode communicator enabled")
             communicator = SerialCommunicator(device_settings.gcode.port, device_settings.gcode.baudrate)
             controller = SjoelControllerGcode(device_settings, communicator)
         elif device_settings.communicator == CommunicatorType.RAW:
-            communicator = CommunicatorRaw()
+            print("Raw communicator enabled")
+            communicator = CommunicatorRaw(device_settings.raw)
             controller = SjoelControllerRaw(device_settings, communicator)
         else:
             raise ValueError("Invalid communicator type")

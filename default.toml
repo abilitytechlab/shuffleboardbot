@@ -1,7 +1,7 @@
 fire_servo_range = [90, 130] #90 is onder de buis
 fire_delay = 2.0
 stepper_range = [0, 300] # tweak this not sure about the range, was not used in old code
-communicator = "gcode"
+communicator = "raw"
 
 [gcode]
 port = "COM8"
@@ -14,6 +14,10 @@ stepper_rate = 2000
 
 [raw]
 servo_pin = 0
+servo_frequency = 50
+servo_min_pulse = 1000
+servo_max_pulse = 2000
+servo_movement_delay = 0.5
 stepper_enable_pin = 1
 stepper_direction_pin = 2
 stepper_step_pin = 3

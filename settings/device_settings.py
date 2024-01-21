@@ -18,8 +18,8 @@ class DeviceSettings(BaseModel):
     fire_delay: float
     stepper_range: tuple[int, int]
     communicator: CommunicatorType
-    gcode: GcodeSettings
-    raw: RawControlsSettings
+    gcode: GcodeSettings | None = None
+    raw: RawControlsSettings | None = None
 
     def to_toml(self):
         """

@@ -19,6 +19,8 @@ class CommunicatorRaw:
 
         # Servo
         self.pi.set_mode(self.settings.servo_pin, pigpio.OUTPUT)
+        self.pi.set_PWM_frequency(self.settings.servo_pin, self.settings.servo_frequency)
+        self.servo_step_size = (self.settings.servo_max_pulse - self.settings.servo_min_pulse) / 180
 
     def set_stepper_state(self, state: bool):
         """
@@ -42,3 +44,28 @@ class CommunicatorRaw:
             time.sleep(self.delay)
             self.pi.write(self.settings.stepper_step_pin, 0)
             time.sleep(self.delay)
+
+    def set_servo_angle(self, angle: float):
+        """
+        Moves the servo to the given angle.
+        """
+        pulse_width = int(self.settings.servo_min_pulse + angle * self.servo_step_size)
+
+        # Make sure the pulse width is within the allowed range
+        if pulse_width < self.settings.servo_min_pulse:
+            print(f"Warning: Servo pulse width {pulse_width} is below minimum {self.settings.servo_min_pulse}")
+            pulse_width = self.settings.servo_min_pulse
+        elif pulse_width > self.settings.servo_max_pulse:
+            print(f"Warning: Servo pulse width {pulse_width} is above maximum {self.settings.servo_max_pulse}")
+            pulse_width = self.settings.servo_max_pulse
+
+        # Move the servo
+        self._set_servo_pulsewidth(pulse_width)
+        time.sleep(self.settings.servo_movement_delay)
+        self._set_servo_pulsewidth(0)
+
+    def _set_servo_pulsewidth(self, pulsewidth: int):
+        """
+        Sets the servo pulsewidth.
+        """
+        self.pi.set_servo_pulsewidth(self.settings.servo_pin, pulsewidth)
