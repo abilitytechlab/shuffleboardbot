@@ -7,7 +7,7 @@ from server.sjoel_server_abc import SjoelServerAbc
 
 
 def generate_frames(camera_index: int, camera_resolution: tuple[int, int]):
-    cap = cv2.VideoCapture(camera_index, params=[
+    cap = cv2.VideoCapture(camera_index, cv2.CAP_ANY, [
         cv2.CAP_PROP_FRAME_WIDTH, camera_resolution[0],
         cv2.CAP_PROP_FRAME_HEIGHT, camera_resolution[1]
     ])
