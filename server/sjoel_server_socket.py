@@ -6,8 +6,11 @@ from controller.sjoel_controller_base import MovementDirection, SjoelControllerB
 from server.sjoel_server_abc import SjoelServerAbc
 
 
-def generate_frames(camera_index: int):
-    cap = cv2.VideoCapture(camera_index)
+def generate_frames(camera_index: int, camera_resolution: tuple[int, int]):
+    cap = cv2.VideoCapture(camera_index, params=[
+        cv2.CAP_PROP_FRAME_WIDTH, camera_resolution[0],
+        cv2.CAP_PROP_FRAME_HEIGHT, camera_resolution[1]
+    ])
     while True:
         ret, frame = cap.read()
         if ret:
@@ -29,9 +32,10 @@ class SjoelServerSocket(SjoelServerAbc):
         self._register_socketio_handlers()
         return self.app
 
-    @staticmethod
-    def video_feed(camera_id: str):
-        return Response(generate_frames(int(camera_id)), mimetype='multipart/x-mixed-replace; boundary=frame')
+    def video_feed(self, camera_id: str):
+        return Response(
+            generate_frames(int(camera_id), self.controller.settings.camera_resolution),
+            mimetype='multipart/x-mixed-replace; boundary=frame')
 
     def _register_socketio_handlers(self):
         @self.socketio.on('left')

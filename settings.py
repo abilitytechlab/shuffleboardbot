@@ -10,7 +10,9 @@ class DeviceSettings:
                  fire_delay: float,
                  fire_servo_name: str,
                  stepper_axis: str,
-                 stepper_step: int):
+                 stepper_step: int,
+                 camera_resolution: tuple[int, int] = (640, 480),
+                 ):
         """
         Settings for the sjoelbak
         :param port: The COM port the sjoelbak is connected to
@@ -30,6 +32,7 @@ class DeviceSettings:
         self.fire_servo_name = fire_servo_name
         self.stepper_axis = stepper_axis
         self.stepper_step = stepper_step
+        self.camera_resolution = camera_resolution
 
     def to_toml(self):
         """
