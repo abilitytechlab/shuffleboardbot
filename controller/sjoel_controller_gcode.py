@@ -13,20 +13,26 @@ class SjoelControllerGcode(SjoelControllerBase):
         :argument settings: The settings of the sjoelbak
         """
         if communicator is None:
-            communicator = SerialCommunicator(self.settings.port, self.settings.baudrate)
-
+            communicator = SerialCommunicator(settings.port, settings.baudrate)
         super().__init__(settings, communicator)
-
+        time.sleep(5)
+        self.communicator.write_command("M106 S255")
         # Set relative positioning
         self.communicator.write_command("G91")
-
+        self.position = 0
         # Set servo to initial position
         self.fire_servo_angle = self.settings.fire_servo_range[0]
         self._set_fire_servo_angle(self.fire_servo_angle)
-        self.communicator.write_command("M92 X1000") # steps per mm
+        self.communicator.write_command("M92 X500") # steps per mm
 
+        #auto home.
+        self.communicator.write_command("G28")
+    
+
+        
         # Home the stepper
         self._center()
+
 
     def fire(self):
         """
@@ -35,23 +41,29 @@ class SjoelControllerGcode(SjoelControllerBase):
         """
         if not self._can_fire():
             raise RuntimeError("Cannot fire while firing")
-        self.communicator.write_command("M106 S255")
         self._set_fire_servo_angle(self.settings.fire_servo_range[1])
         time.sleep(self.settings.fire_delay)
         self._set_fire_servo_angle(self.settings.fire_servo_range[0])
-        self.communicator.write_command("M106 S0")
 
     def move(self, direction: MovementDirection):
         """
         Move the stepper motor in a certain direction
         :param direction: The direction to move the stepper motor in
         """
+        #hardcode position
+        if self.position >= 160 and direction == MovementDirection.RIGHT:
+            return
         if direction == MovementDirection.LEFT:
+            self.position -= self.settings.stepper_step
             self._move_raw(-self.settings.stepper_step)
         elif direction == MovementDirection.RIGHT:
+            self.position += self.settings.stepper_step
             self._move_raw(self.settings.stepper_step)
         else:
             raise ValueError("Invalid direction")
+        if self.position < 0:
+            self.position = 0
+        print(self.position)
 
     def _set_stepper_active(self, active: bool):
         """
@@ -92,3 +104,6 @@ class SjoelControllerGcode(SjoelControllerBase):
         self._set_stepper_active(True)
         self.communicator.write_command("G28")
         self._set_stepper_active(False)
+
+    def __del__(self):
+        self.communicator.write_command("M106 S0")
