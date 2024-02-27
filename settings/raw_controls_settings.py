@@ -11,3 +11,4 @@ class RawControlsSettings(BaseModel):
     stepper_enable_pin: int
     stepper_direction_pin: int
     stepper_step_pin: int
+    stepper_steps: int
