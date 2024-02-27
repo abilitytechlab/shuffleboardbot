@@ -1,4 +1,4 @@
-fire_servo_range = [90, 130] #90 is onder de buis
+fire_servo_range = [65, 140] #90 is onder de buis
 fire_delay = 2.0
 stepper_range = [0, 300] # tweak this not sure about the range, was not used in old code
 communicator = "raw"
@@ -13,13 +13,12 @@ stepper_steps_per_mm = 1000
 stepper_rate = 2000
 
 [raw]
-servo_pin = 0
+servo_pin = 18
 servo_frequency = 50
 servo_min_pulse = 1000
 servo_max_pulse = 2000
 servo_movement_delay = 0.5
-stepper_enable_pin = 1
-stepper_direction_pin = 2
-stepper_step_pin = 3
 stepper_steps = 10
-#slp pin (pin  via gnd 5 v --> gaat triver uit)
+stepper_enable_pin = 5
+stepper_direction_pin = 6
+stepper_step_pin = 16
