@@ -22,6 +22,15 @@ class CommunicatorRaw:
         self.pi.set_mode(self.settings.servo_pin, pigpio.OUTPUT)
         self.pi.set_PWM_frequency(self.settings.servo_pin, self.settings.servo_frequency)
         self.servo_step_size = (self.settings.servo_max_pulse - self.settings.servo_min_pulse) / 180
+        # Limit
+        self.pi.set_mode(self.settings.limit_pin, pigpio.INPUT)
+        self.pi.set_pull_up_down(self.settings.limit_pin, pigpio.PUD_UP)
+        self.pi.callback(self.settings.limit_pin, pigpio.RISING_EDGE, lambda gpio, level, tick: self._on_limit_pressed())
+        self.pi.callback(self.settings.limit_pin, pigpio.FALLING_EDGE, lambda gpio, level, tick: self._on_limit_released())
+        self._debounce_interval = 1 #ms
+        self._last_trigger = 0
+        self._is_locked = False
+        self._locked_direction = None
 
     def set_stepper_state(self, state: bool):
         """
@@ -70,3 +79,18 @@ class CommunicatorRaw:
         Sets the servo pulsewidth.
         """
         self.pi.set_servo_pulsewidth(self.settings.servo_pin, pulsewidth)
+
+    def _on_limit_pressed(self):
+        # print why
+        if ((time.time_ns() - self._last_trigger)/1_000_000):
+            print(f"limit pressed, locked direction: {self._locked_direction}, last direction: {self._last_direction}")
+            self._locked_direction = self._last_direction
+            self._is_locked = True
+            self._last_trigger = time.time_ns()
+    
+    def _on_limit_released(self):
+        if ((time.time_ns() - self._last_trigger)/1_000_000):
+            print("limit released")
+            self._locked_direction = None
+            self._is_locked = False
+            self._last_trigger = time.time_ns()
