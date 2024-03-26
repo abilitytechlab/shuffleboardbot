@@ -22,6 +22,13 @@ class CommunicatorRaw:
         self.pi.set_mode(self.settings.servo_pin, pigpio.OUTPUT)
         self.pi.set_PWM_frequency(self.settings.servo_pin, self.settings.servo_frequency)
         self.servo_step_size = (self.settings.servo_max_pulse - self.settings.servo_min_pulse) / 180
+
+        # Wheels
+        self.pi.set_mode(self.settings.wheel_left_in1, pigpio.OUTPUT)
+        self.pi.set_mode(self.settings.wheel_left_in2, pigpio.OUTPUT)
+        self.pi.write(self.settings.wheel_left_in1, 1)
+        self.pi.write(self.settings.wheel_left_in2, 0)
+
         # Limit
         self.pi.set_mode(self.settings.limit_pin, pigpio.INPUT)
         self.pi.set_pull_up_down(self.settings.limit_pin, pigpio.PUD_UP)
