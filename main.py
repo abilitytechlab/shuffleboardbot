@@ -8,6 +8,7 @@ from communicator.communicator_serial import SerialCommunicator
 from controller.sjoel_controller_gcode import SjoelControllerGcode
 from controller.sjoel_controller_raw import SjoelControllerRaw
 from server.sjoel_server_socket import SjoelServerSocket
+from server.sjoel_server_simple import SjoelServerSimple
 from settings.device_settings import CommunicatorType
 from settings.hosting_settings import HostingSettings
 
@@ -62,7 +63,7 @@ def create_app(config: HostingSettings | None = None):
             raise ValueError("Invalid communicator type")
 
     # Create server
-    return SjoelServerSocket(controller).init()
+    return SjoelServerSimple(controller).init()
 
 
 if __name__ == '__main__':
