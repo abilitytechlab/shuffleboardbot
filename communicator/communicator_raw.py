@@ -86,6 +86,27 @@ class CommunicatorRaw:
         """
         self.pi.set_servo_pulsewidth(self.settings.servo_pin, pulsewidth)
 
+    def _set_motor_enabled(self, enabled: bool):
+        """
+        Turns the wheels on/off
+        """
+        # self.pi.set_PWM_frequency(self.settings.wheel_left_enable, 16_000)
+        # if not enabled:
+        #     self.pi.set_PWM_dutycycle(self.settings.wheel_left_enable, 0)
+        #     return
+
+        # self.pi.set_PWM_dutycycle(self.settings.wheel_left_enable, 180)
+
+        steps = 50
+        start = 50
+        sleep_per_step = 1.0 / steps
+        for step in range(steps+1):
+            current_speed = (((180-start)/steps) * step) + start
+            print(current_speed)
+            self.pi.set_PWM_dutycycle(self.settings.wheel_left_enable, current_speed)
+            time.sleep(sleep_per_step)
+        #self.pi.write(self.settings.wheel_left_enable, 1 if enabled else 0)
+
     def _on_limit_pressed(self):
         # print why
         if ((time.time_ns() - self._last_trigger)/1_000_000):
