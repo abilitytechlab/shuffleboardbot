@@ -16,7 +16,7 @@ class CommunicatorRaw:
         self.pi.set_mode(self.settings.stepper_enable_pin, pigpio.OUTPUT)
         self.pi.set_mode(self.settings.stepper_step_pin, pigpio.OUTPUT)
         self.pi.set_mode(self.settings.stepper_direction_pin, pigpio.OUTPUT)
-        self.delay = 0.005 / 4
+        self.delay = 0.0005
 
         # Servo
         self.pi.set_mode(self.settings.servo_pin, pigpio.OUTPUT)
@@ -47,13 +47,19 @@ class CommunicatorRaw:
         # write direction
         direction_value = 1 if direction == MovementDirection.LEFT else 0
         self.pi.write(self.settings.stepper_direction_pin, direction_value)
+        self._last_direction = direction
+        print(f"moving {direction}")
 
         # write steps
         for _ in range(steps):
-            self.pi.write(self.settings.stepper_step_pin, 1)
-            time.sleep(self.delay)
-            self.pi.write(self.settings.stepper_step_pin, 0)
-            time.sleep(self.delay)
+            # Check if we are allowed to move every step
+            if not self._is_locked or direction is not self._locked_direction:
+                self.pi.write(self.settings.stepper_step_pin, 1)
+                time.sleep(self.delay)
+                self.pi.write(self.settings.stepper_step_pin, 0)
+                time.sleep(self.delay)
+            else:
+                return
 
     def set_servo_angle(self, angle: float):
         """
