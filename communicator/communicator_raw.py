@@ -9,8 +9,8 @@ from settings.raw_controls_settings import RawControlsSettings
 class CommunicatorRaw:
     def __init__(self, settings: RawControlsSettings):
         self.settings = settings
-
         self.pi = pigpio.pi()
+        self._last_direction = None
 
         # Stepper
         self.pi.set_mode(self.settings.stepper_enable_pin, pigpio.OUTPUT)
@@ -38,6 +38,9 @@ class CommunicatorRaw:
         self._last_trigger = 0
         self._is_locked = False
         self._locked_direction = None
+
+        self._set_motor_enabled(True)
+
 
     def set_stepper_state(self, state: bool):
         """
@@ -128,3 +131,6 @@ class CommunicatorRaw:
             self._locked_direction = None
             self._is_locked = False
             self._last_trigger = time.time_ns()
+
+    def __del__(self):
+        self._set_motor_enabled(False)
