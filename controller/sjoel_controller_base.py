@@ -9,8 +9,8 @@ class MovementDirection(enum.Enum):
     """
     An enum for the direction of movement
     """
-    LEFT = 0
-    RIGHT = 1
+    LEFT = 1
+    RIGHT = 0
 
 
 class SjoelControllerBase(ABC):

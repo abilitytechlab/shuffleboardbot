@@ -113,7 +113,8 @@ class CommunicatorRaw:
         for step in range(steps+1):
             current_speed = (((180-start)/steps) * step) + start
             print(current_speed)
-            self.pi.set_PWM_dutycycle(self.settings.wheel_left_enable, current_speed)
+            self.pi.set_PWM_dutycycle(self.settings.wheel_left_in2, current_speed)
+            # self.pi.set_PWM_dutycycle(self.settings.wheel_right_in1, current_speed)
             time.sleep(sleep_per_step)
         #self.pi.write(self.settings.wheel_left_enable, 1 if enabled else 0)
 

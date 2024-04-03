@@ -29,6 +29,7 @@ class SjoelControllerGcode(SjoelControllerBase):
         self._center()
 
     def fire(self):
+        print("fire")
         """
         Fire the sjoelbak, first turns on the fan
         which turns on the firing motors via a relay
@@ -50,6 +51,7 @@ class SjoelControllerGcode(SjoelControllerBase):
             self._move_raw(-self.settings.gcode.stepper_step)
         elif direction == MovementDirection.RIGHT:
             self._move_raw(self.settings.gcode.stepper_step)
+            # print("i should move to the right, it is calling right")
         else:
             raise ValueError("Invalid direction")
 

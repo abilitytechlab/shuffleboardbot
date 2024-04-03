@@ -63,7 +63,7 @@ def create_app(config: HostingSettings | None = None):
             raise ValueError("Invalid communicator type")
 
     # Create server
-    return SjoelServerSimple(controller).init()
+    return SjoelServerSocket(controller).init()
 
 
 if __name__ == '__main__':
