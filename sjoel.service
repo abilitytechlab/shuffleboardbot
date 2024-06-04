@@ -1,0 +1,15 @@
+[Unit]
+Description=Server for hosting the sjoelrobot
+After=network.target
+
+[Service]
+ExecStart=/bin/bash -c 'source /opt/sjoel/venv/bin/activate && gunicorn -w 1 main:create_app() -b 0.0.0.0:5000'
+WorkingDirectory=/opt/sjoel
+User=sjoeluser
+Group=sjoeluser
+Restart=always
+StandardOutput=file:/var/log/sjoelserver/output.log
+StandardError=file:/var/log/sjoelserver/error.log
+
+[Install]
+WantedBy=multi-user.target
