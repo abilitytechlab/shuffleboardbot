@@ -29,7 +29,9 @@ wheel_right_enable = 26 # Unused
 wheel_right_in1 = 6  # Unused
 wheel_right_in2 = 19 
 limit_pin = 7
-limitswitch_pin = 23
+
+limitswitch_pin_right = 24
+limitswitch_pin_left = 23
 joystick_button = 2 #white  
 joytick_switchLeft = 3 #yellow of green 
 joytick_switchRicht = 4 #green of yellow 

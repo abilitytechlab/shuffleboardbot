@@ -36,22 +36,17 @@ class CommunicatorRaw:
         self.pi.write(self.settings.wheel_right_in1, 1)
 
         # Limit
-        self.pi.set_mode(self.settings.limit_pin, pigpio.INPUT)
-        self.pi.set_pull_up_down(self.settings.limit_pin, pigpio.PUD_UP)
-        self.pi.callback(self.settings.limit_pin, pigpio.RISING_EDGE, lambda gpio, level, tick: self._on_limit_pressed())
-        self.pi.callback(self.settings.limit_pin, pigpio.FALLING_EDGE, lambda gpio, level, tick: self._on_limit_released())
-        self._debounce_interval = 3 #ms
-        self._last_trigger = 0
-        self._is_locked = False
-        self._locked_direction = None
-        self.last = None
+        # self.pi.set_mode(self.settings.limit_pin, pigpio.INPUT)
+        # self.pi.set_pull_up_down(self.settings.limit_pin, pigpio.PUD_UP)
+        # self.pi.callback(self.settings.limit_pin, pigpio.RISING_EDGE, lambda gpio, level, tick: self._on_limit_pressed())
+        # self.pi.callback(self.settings.limit_pin, pigpio.FALLING_EDGE, lambda gpio, level, tick: self._on_limit_released())
+        # self._debounce_interval = 3 #ms
+        # self._last_trigger = 0
         self._set_motor_enabled(True)
 
         #limitswitch
-        self.pi.set_mode(self.settings.limitswitch_pin, pigpio.INPUT)
-        # self.pi..... #eva
-
-
+        self.pi.set_mode(self.settings.limitswitch_pin_right, pigpio.INPUT)
+        self.pi.set_mode(self.settings.limitswitch_pin_left, pigpio.INPUT)
 
     def set_stepper_state(self, state: bool):
         """
@@ -66,27 +61,26 @@ class CommunicatorRaw:
         Moves the given amount of steps in the given direction.
         """
         # write direction
-        direction_value = 0 if direction == MovementDirection.LEFT else 1
+        direction_value = 1 if direction == MovementDirection.LEFT else 0
         self.pi.write(self.settings.stepper_direction_pin, direction_value)
         self._last_direction = direction
         print(f"moving {direction}")
         #call function van de limit Switch
-
-        print(f"hello")
-        checkLimit = self.pi.read(self.settings.limitswitch_pin)
-        print(f'check limit')
-        print(checkLimit)
-
+        limit_pin = self.settings.limitswitch_pin_right if direction == MovementDirection.RIGHT else self.settings.limitswitch_pin_left
 
         # write steps
         for _ in range(steps):
             # Check if we are allowed to move every step
-            if not self._is_locked or direction is not self._locked_direction:
+            if self.pi.read(limit_pin) == 0:
+                print("move")
                 self.pi.write(self.settings.stepper_step_pin, 1)
                 time.sleep(self.delay)
                 self.pi.write(self.settings.stepper_step_pin, 0)
                 time.sleep(self.delay)
+
             else:
+                print("stop")
+
                 return
 
     def set_servo_angle(self, angle: float):
@@ -119,13 +113,6 @@ class CommunicatorRaw:
         """
         Turns the wheels on/off
         """
-        # self.pi.set_PWM_frequency(self.settings.wheel_left_enable, 16_000)
-        # if not enabled:
-        #     self.pi.set_PWM_dutycycle(self.settings.wheel_left_enable, 0)
-        #     return
-
-        # self.pi.set_PWM_dutycycle(self.settings.wheel_left_enable, 180)
-
         steps = 50
         start = 50
         sleep_per_step = 1.0 / steps
@@ -137,19 +124,19 @@ class CommunicatorRaw:
             time.sleep(sleep_per_step)
         #self.pi.write(self.settings.wheel_left_enable, 1 if enabled else 0)
 
-    def _on_limit_pressed(self):
-        if (time.time_ns() - self._last_trigger)/1_000_000 > self._debounce_interval:
-            print(f"limit pressed, locked direction: {self._locked_direction}, last direction: {self._last_direction}")
-            self._locked_direction = self._last_direction
-            self._is_locked = True
-            self._last_trigger = time.time_ns()
+    # def _on_limit_pressed(self):
+    #     if (time.time_ns() - self._last_trigger)/1_000_000 > self._debounce_interval:
+    #         print(f"limit pressed, locked direction: {self._locked_direction}, last direction: {self._last_direction}")
+    #         self._locked_direction = self._last_direction
+    #         self._is_locked = True
+    #         self._last_trigger = time.time_ns()
     
-    def _on_limit_released(self):
-        if (time.time_ns() - self._last_trigger)/1_000_000 > self._debounce_interval:
-            print("limit released")
-            self._locked_direction = None
-            self._is_locked = False
-            self._last_trigger = time.time_ns()
+    # def _on_limit_released(self):
+    #     if (time.time_ns() - self._last_trigger)/1_000_000 > self._debounce_interval:
+    #         print("limit released")
+    #         self._locked_direction = None
+    #         self._is_locked = False
+    #         self._last_trigger = time.time_ns()
     
     # def checkLimitSwitch(self): #hier ben je aan het werk eva 
     #     while True:
