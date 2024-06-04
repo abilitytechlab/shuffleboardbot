@@ -1,6 +1,6 @@
-from communicator.communicator_abc import CommunicatorAbc
+from communicator.communicator_abc import CommunicatorText
 
 
-class MockCommunicator(CommunicatorAbc):
+class MockCommunicator(CommunicatorText):
     def write_command(self, command: str):
         print(command)

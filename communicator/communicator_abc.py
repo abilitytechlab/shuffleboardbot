@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 
 
-class CommunicatorAbc(ABC):
+class CommunicatorText(ABC):
     @abstractmethod
     def write_command(self, command: str):
         """

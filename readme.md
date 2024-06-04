@@ -37,22 +37,18 @@ stepper_axis = "X"              # Axis of the stepper
 stepper_step = 10               # How many steps to move the stepper per command
 ```
 
-## Commands
+## Usage
 
-Currently the software only communicates through GCode commands over a serial connection.
+Before connecting to the raspberry pi, open your windows search bar and search "View network computers and devices", double click your wi-fi and click properties, go to the sharing tab on the top and enable "Allow other network users to connect through this computer's internet connection".
 
-When the servo is fired, the software will send the following commands to the robot:
+Then connect to the raspberry pi using an ethernet cable. Make sure raspberry pi is on.
+Then you can connect to the pi using ssh via the command line or using an extension for your IDE (like vscode).
 
-1. `M280 [servo_name] S[fire_servo_range[1]]`, e.g. `M280 P0 S180`
-2. wait for `fire_delay` seconds
-3. `M280 [servo_name] S[fire_servo_range[0]]`, e.g. `M280 P0 S120`
+To connect via the command line write the following:
+`ssh boris@raspberrypi.local`
 
-When the stepper is moved, the software will send the following commands to the robot:
+The password is the default raspberrypi password: "raspberry"
 
-1. `G0 [stepper_axis][position]`, e.g. `G0 X10`
+Connection with the pi can be spotty and sometimes fail, reconnecting the ethernet cable and/or restarting the pi can help.
 
-## Todo
-
-- [x] Apparently `G0` is the command for moving the stepper, I assumed it was the stepper name, needs to be removed.
-- [ ] Add a way to configure the commands that are sent
-- [ ] Read position before moving stepper
+To connect using an extension simply requires configuring the connecting, the hostname then is raspberrypi.local and the user is boris.

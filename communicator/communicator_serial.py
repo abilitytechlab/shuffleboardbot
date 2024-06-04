@@ -1,9 +1,9 @@
 import serial
 
-from communicator.communicator_abc import CommunicatorAbc
+from communicator.communicator_abc import CommunicatorText
 
 
-class SerialCommunicator(CommunicatorAbc):
+class SerialCommunicator(CommunicatorText):
     def __init__(self, port: str, baud: int):
         """
         A class that communicates with the robot over serial
