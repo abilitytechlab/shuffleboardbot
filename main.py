@@ -3,9 +3,15 @@ import argparse
 from serial import SerialException
 
 from communicator.communicator_mock import MockCommunicator
+from communicator.communicator_raw import CommunicatorRaw
+from communicator.communicator_serial import SerialCommunicator
+from controller.sjoel_controller_gcode import SjoelControllerGcode
+from controller.sjoel_controller_raw import SjoelControllerRaw
 from server.sjoel_server_socket import SjoelServerSocket
-from settings import HostingSettings
-from sjoel_controller import SjoelController
+from server.sjoel_server_simple import SjoelServerSimple
+from settings.device_settings import CommunicatorType
+from settings.hosting_settings import HostingSettings
+
 
 
 def parse_hosting_settings() -> HostingSettings:
@@ -23,42 +29,49 @@ def parse_hosting_settings() -> HostingSettings:
     return HostingSettings(args.config, args.interface, args.port, args.debug, args.mock, args.serial, args.baud)
 
 
+def create_app(config: HostingSettings | None = None):
+    # Load hosting settings if not provided
+    if config is None:
+        try:
+            with open('config.toml') as f:
+                config = HostingSettings.from_toml(f.read())
+        except FileNotFoundError:
+            print("Hosting settings not found")
+            exit(1)
+
+    # Load device settings
+    try:
+        device_settings = config.get_device_settings()
+    except FileNotFoundError:
+        print("Device settings not found")
+        exit(1)
+
+    # Create controller
+    if config.mock:
+        print("Mock communicator enabled")
+        communicator = MockCommunicator()
+        controller = SjoelControllerGcode(device_settings, communicator)
+    else:
+        if device_settings.communicator == CommunicatorType.GCODE:
+            print("Gcode communicator enabled")
+            communicator = SerialCommunicator(device_settings.gcode.port, device_settings.gcode.baudrate)
+            controller = SjoelControllerGcode(device_settings, communicator)
+        elif device_settings.communicator == CommunicatorType.RAW:
+            print("Raw communicator enabled")
+            communicator = CommunicatorRaw(device_settings.raw)
+            controller = SjoelControllerRaw(device_settings, communicator)
+        else:
+            raise ValueError("Invalid communicator type")
+
+    # Create server
+    return SjoelServerSocket(controller).init()
+
+
 if __name__ == '__main__':
     # load settings
     hosting_settings = parse_hosting_settings()
-
-    if hosting_settings.debug:
-        print("Debug logging enabled")
-        print("Hosting settings:")
-        print(hosting_settings)
-
-    try:
-        device_settings = hosting_settings.get_device_settings()
-    except FileNotFoundError:
-        print("Config file not found")
-        exit(1)
-
-    if hosting_settings.debug:
-        print("Device settings:")
-        print(device_settings)
-
-    # process overrides
-    if hosting_settings.serial is not None:
-        device_settings.serial_port = hosting_settings.serial
-
-    if hosting_settings.baud is not None:
-        device_settings.baud_rate = hosting_settings.baud
-
-    # create controller
-    communicator = None
-    if hosting_settings.mock:
-        communicator = MockCommunicator()
-
-    try:
-        controller = SjoelController(device_settings, communicator)
-    except SerialException as e:
-        print(e)
-        exit(1)
-
-    web = SjoelServerSocket(hosting_settings, controller)
-    web.run()
+    web = create_app(hosting_settings)
+    web.run(
+        host=hosting_settings.interface,
+        port=hosting_settings.port,
+        debug=hosting_settings.debug)

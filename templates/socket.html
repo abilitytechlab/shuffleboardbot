@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="nl">
 <head>
     <meta charset="UTF-8">
     <title>Sjoel robot</title>
@@ -8,8 +8,24 @@
             margin: 0;
         }
 
+        #video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+        }
+
         #container {
-            display: flex;
+            display: grid;
+            grid-template-areas:
+                "fire fire fire fire fire"
+                "left . . . right"
+                "left . . . right"
+                "left . . . right"
+                "left . . . right"
+                "left . . . right";
             width: 100vw;
             height: 100vh;
         }
@@ -17,6 +33,7 @@
         #container > * {
             width: 100%;
             height: 100%;
+            opacity: 0.6;
         }
 
         button {
@@ -24,62 +41,70 @@
             width: 100%;
             height: 100%;
         }
-
-        #logs {
-            overflow: hidden;
-            height: 100%;
-            max-width: 10%;
-        }
     </style>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"
             integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA=="
             crossorigin="anonymous"></script>
     <script type="text/javascript" charset="utf-8">
-        const socket = io()
-        const logs = []
+        const socket = io();
+        let intervalId;
 
-        async function left() {
-            socket.emit('left')
+        function startEmitting(eventType) {
+            const closure = () => {
+                emit(eventType)
+            }
+
+            closure()
+            intervalId = setInterval(() => {
+                closure()
+            }, 500)
         }
 
-        async function right() {
-            socket.emit('right')
+        function emit(eventType) {
+            socket.emit(eventType)
         }
 
-        async function fire() {
-            socket.emit('fire')
+        function stopEmitting() {
+            clearInterval(intervalId)
         }
 
         function update(data) {
-            logs.unshift(data)
-            console.log(logs)
-            document.getElementById('logs').innerHTML = logs.join('<br/>')
+            console.log(data)
         }
 
         socket.on('position', update)
         socket.on('fire', update)
-        socket.on('error', update)
+        socket.on('error', data => console.error(data))
     </script>
 </head>
 <body>
 <div id="container">
-    <div>
-        <button onclick="left()">
+    <div style="grid-area: left">
+        <button
+                onmouseover="startEmitting('left')"
+                onmouseout="stopEmitting()"
+                onclick="emit('left')">
             Links
         </button>
     </div>
-    <div>
-        <button onclick="fire()">
+    <div style="grid-area: fire">
+        <button
+                onmouseover="startEmitting('fire')"
+                onmouseout="stopEmitting()"
+                onclick="emit('fire')">
             Schieten
         </button>
     </div>
-    <div>
-        <button onclick="right()">
+    <div style="grid-area: right">
+        <button
+                onmouseover="startEmitting('right')"
+                onmouseout="stopEmitting()"
+                onclick="emit('right')">
             Rechts
         </button>
     </div>
-    <div id="logs"></div>
 </div>
+<img src="{{ url_for('video_feed', camera_id=0) }}" id="video" alt="Livestream">
 </body>
 </html>
