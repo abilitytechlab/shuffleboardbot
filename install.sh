@@ -1,5 +1,10 @@
 #!/bin/bash
 
+if [ "$EUID" -ne 0 ]
+  then echo "Please run as root"
+  exit
+fi
+
 # Create directories and copy files
 mkdir /opt/sjoel
 cp -r . /opt/sjoel
