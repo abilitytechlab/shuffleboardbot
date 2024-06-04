@@ -21,3 +21,4 @@ class RawControlsSettings(BaseModel):
     wheel_right_in2: int
 
     limit_pin: int
+    limitswitch_pin: int

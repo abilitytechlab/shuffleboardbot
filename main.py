@@ -13,6 +13,7 @@ from settings.device_settings import CommunicatorType
 from settings.hosting_settings import HostingSettings
 
 
+
 def parse_hosting_settings() -> HostingSettings:
     parser = argparse.ArgumentParser(description='Sjoeler 3000')
     parser.add_argument('--config', default='default.toml', help='Path to the config file, default: default.toml')

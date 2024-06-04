@@ -27,6 +27,7 @@ class SjoelControllerGcode(SjoelControllerBase):
 
         # Home the stepper
         self._center()
+        
 
     def fire(self):
         print("fire")
@@ -42,11 +43,15 @@ class SjoelControllerGcode(SjoelControllerBase):
         self._set_fire_servo_angle(self.settings.fire_servo_range[0])
         self._set_fan_speed(0)
 
+
+
+
     def move(self, direction: MovementDirection):
         """
         Move the stepper motor in a certain direction
         :param direction: The direction to move the stepper motor in
         """
+        
         if direction == MovementDirection.LEFT:
             self._move_raw(-self.settings.gcode.stepper_step)
         elif direction == MovementDirection.RIGHT:
@@ -62,6 +67,10 @@ class SjoelControllerGcode(SjoelControllerBase):
         """
         command = "M17" if active else "M18"
         self.communicator.write_command(command)
+    
+    #i need to set these to true and false to make it work 
+
+
 
     def _set_fire_servo_angle(self, angle: int):
         """
@@ -100,3 +109,6 @@ class SjoelControllerGcode(SjoelControllerBase):
         self._set_stepper_active(True)
         self.communicator.write_command("G28")
         self._set_stepper_active(False)
+
+
+        

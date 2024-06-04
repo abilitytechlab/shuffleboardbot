@@ -46,7 +46,6 @@ class SjoelServerSocket(SjoelServerAbc):
 
         @self.socketio.on('fire')
         def fire():
-            print("Firing")
             try:
                 self.socketio.emit('fire', 'begin fire')
                 self.controller.fire()
