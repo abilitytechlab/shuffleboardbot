@@ -17,8 +17,9 @@ chown -R sjoeluser:sjoeluser /opt/sjoel
 chown -R sjoeluser:sjoeluser /var/log/sjoelserver
 
 # Install dependencies
-add-apt-repository ppa:deadsnakes/ppa 
+add-apt-repository ppa:deadsnakes/ppa
 apt-get update
+apt-get upgrade
 apt-get install python3.11 pigpio python-pigpio python3-pigpio
 
 # Create venv
