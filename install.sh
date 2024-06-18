@@ -19,8 +19,8 @@ chown -R sjoeluser:sjoeluser /var/log/sjoelserver
 # Install dependencies
 add-apt-repository ppa:deadsnakes/ppa
 apt-get update
-apt-get upgrade
-apt-get install python3.11 pigpio python-pigpio python3-pigpio
+apt-get -y upgrade
+apt-get -y install python3.11 pigpio python-pigpio python3-pigpio
 
 # Create venv
 python3.11 -m venv venv
@@ -39,5 +39,7 @@ nmcli con up Hotspot
 # Install service
 cp sjoel.service /etc/systemd/system/
 systemctl daemon-reload
+systemctl enable pigpiod.service
+systemctl start pigpiod.service
 systemctl enable sjoel.service
 systemctl start sjoel.service
