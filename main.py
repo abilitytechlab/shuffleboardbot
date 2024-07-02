@@ -1,17 +1,11 @@
 import argparse
 
-from serial import SerialException
-
 from communicator.communicator_mock import MockCommunicator
-from communicator.communicator_raw import CommunicatorRaw
 from communicator.communicator_serial import SerialCommunicator
 from controller.sjoel_controller_gcode import SjoelControllerGcode
-from controller.sjoel_controller_raw import SjoelControllerRaw
 from server.sjoel_server_socket import SjoelServerSocket
-from server.sjoel_server_simple import SjoelServerSimple
 from settings.device_settings import CommunicatorType
 from settings.hosting_settings import HostingSettings
-
 
 
 def parse_hosting_settings() -> HostingSettings:
@@ -57,6 +51,8 @@ def create_app(config: HostingSettings | None = None):
             communicator = SerialCommunicator(device_settings.gcode.port, device_settings.gcode.baudrate)
             controller = SjoelControllerGcode(device_settings, communicator)
         elif device_settings.communicator == CommunicatorType.RAW:
+            from communicator.communicator_raw import CommunicatorRaw
+            from controller.sjoel_controller_raw import SjoelControllerRaw
             print("Raw communicator enabled")
             communicator = CommunicatorRaw(device_settings.raw)
             controller = SjoelControllerRaw(device_settings, communicator)
