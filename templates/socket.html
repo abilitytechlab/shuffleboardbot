@@ -5,6 +5,7 @@
     <title>Sjoel robot</title>
     <style>
         body {
+            font-family: Arial, sans-serif;
             margin: 0;
         }
 
@@ -25,7 +26,7 @@
                 "left . . . right"
                 "left . . . right"
                 "left . . . right"
-                "left . . . right";
+                "left . dropdown . right";
             width: 100vw;
             height: 100vh;
         }
@@ -47,16 +48,25 @@
             integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA=="
             crossorigin="anonymous"></script>
     <script type="text/javascript" charset="utf-8">
-        const socket = io();
-        let intervalId;
+        const socket = io()
+        let intervalId
+        let isLeader
+        let users = []
+
+        const adjectives = ["snelle", "grote", "kleine", "sterke", "slimme", "dappere", "luie", "schattige", "gevaarlijke", "lieve", "zachte", "woeste", "mooie", "scherpe", "lange", "korte", "wilde", "rustige", "vlugge", "vriendelijke", "harige", "heldere", "dikke", "dunne", "vrolijke", "angstige", "luide", "trotse", "actieve", "speelse", "slanke", "pluizige", "levendige", "stille", "elegante", "sierlijke", "luchtige", "zware", "veilige", "vliegende", "springende", "zwemmende", "klimmende"]
+        const nouns = ["hond", "kat", "koe", "leeuw", "tijger", "olifant", "aap", "giraffe", "zebra", "beer", "wolf", "vos", "schildpad", "egel", "mus", "duif", "raaf", "valk", "haai", "walvis", "dolfijn", "krab", "kreeft", "spin", "mier", "bij", "wesp", "vlinder", "libel", "kever"]
 
         function startEmitting(eventType) {
             const closure = () => {
+                if (!isLeader)
+                    return
                 emit(eventType)
             }
 
             closure()
             intervalId = setInterval(() => {
+                if (!isLeader)
+                    clearInterval(intervalId)
                 closure()
             }, 500)
         }
@@ -73,15 +83,76 @@
             console.log(data)
         }
 
-        socket.on('position', update)
-        socket.on('fire', update)
-        socket.on('error', data => console.error(data))
+        function setButtonActive(active) {
+            document.querySelectorAll(".control-button").forEach(button => {
+                button.disabled = !active
+            })
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Username
+            const username = `${adjectives[Math.floor(Math.random() * adjectives.length)]} ${nouns[Math.floor(Math.random() * nouns.length)]}`
+            const usernameElement = document.getElementById('username')
+            usernameElement.innerText = username
+
+            // Select new leader dropdown
+            const selectElement = document.getElementById('users')
+            selectElement.addEventListener('change', event => {
+                if (isLeader && event.target.value !== '-1') {
+                    socket.emit('leader', event.target.value)
+                }
+
+                event.target.value = '-1'
+            })
+
+            // Receive list of users -> update dropdown
+            socket.on('users', newUsers => {
+                users = newUsers
+                selectElement.innerHTML = ''
+
+                const noneOption = document.createElement('option')
+                noneOption.value = '-1'
+                noneOption.innerText = 'Selecteer een nieuwe bestuurder'
+                selectElement.appendChild(noneOption)
+
+                users.forEach(user => {
+                    const option = document.createElement('option')
+                    option.value = user
+                    option.innerText = user
+                    selectElement.appendChild(option)
+                })
+            })
+
+            // New leader is selected -> update active state
+            socket.on('leader', leader => {
+                if (leader === username) {
+                    isLeader = true
+                    selectElement.style.display = 'block'
+                    console.log('You are the leader')
+                } else {
+                    isLeader = false
+                    selectElement.style.display = 'none'
+                    console.log(`The leader is ${leader}`)
+                }
+                setButtonActive(isLeader)
+            })
+
+            // Update information
+            socket.on('position', update)
+            socket.on('fire', update)
+            socket.on('error', data => console.error(data))
+
+            // Join the game
+            setButtonActive(false)
+            socket.emit('join', username)
+        })
     </script>
 </head>
 <body>
 <div id="container">
     <div style="grid-area: left">
         <button
+                class="control-button"
                 onmouseover="startEmitting('left')"
                 onmouseout="stopEmitting()"
                 onclick="emit('left')">
@@ -90,6 +161,7 @@
     </div>
     <div style="grid-area: fire">
         <button
+                class="control-button"
                 onmouseover="startEmitting('fire')"
                 onmouseout="stopEmitting()"
                 onclick="emit('fire')">
@@ -98,11 +170,19 @@
     </div>
     <div style="grid-area: right">
         <button
+                class="control-button"
                 onmouseover="startEmitting('right')"
                 onmouseout="stopEmitting()"
                 onclick="emit('right')">
             Rechts
         </button>
+    </div>
+    <div style="grid-area: dropdown; display: flex; flex-direction: column-reverse">
+        <select name="users" id="users" style="display: none; width:100%;">
+            <option value="-1" selected disabled>Selecteer een nieuwe bestuurder</option>
+        </select>
+        <span id="username"
+              style="width:100%; text-align: center;color: white;font-size: 2em; font-weight: bold;"></span>
     </div>
 </div>
 <img src="{{ url_for('video_feed', camera_id=0) }}" id="video" alt="Livestream">
