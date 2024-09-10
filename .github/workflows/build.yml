@@ -15,7 +15,11 @@ jobs:
         uses: hashicorp/setup-packer@main
         id: setup
       - name: Setup arm packer prerequisites
-        run: sudo apt-get install qemu-user-static go -y
+        run: |
+          add-apt-repository ppa:longsleep/golang-backports
+          apt-get update
+          apt-get install golang-go        
+          apt-get install qemu-user-static go
       - name: Build packer-builder-arm
         run: |
           git clone https://github.com/mkaczanowski/packer-builder-arm
