@@ -8,8 +8,8 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Setup `packer`
-        uses: hashicorp/setup-packer@v1
-        id: setup
+        uses: hashicorp-contrib/setup-packer@v1
+        # id: setup
       # - name: Setup arm packer prerequisites
       #   run: |
       #     sudo add-apt-repository ppa:longsleep/golang-backports
