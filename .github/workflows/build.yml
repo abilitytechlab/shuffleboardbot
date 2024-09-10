@@ -41,19 +41,14 @@ jobs:
           go mod download
           go build .
         shell: bash
-      - name: Print current directory
-        run: |
-          pwd
-          ls
-        shell: bash
       - name: init example image
         run: |
-          cd $GITHUB_WORKSPACE/packer-builder-arm
+          cd $GITHUB_WORKSPACE/packer/plugins/packer-builder-arm
           packer init boards/raspberry-pi-4/ubuntu_server_20.04_arm64.pkr.hcl
         shell: bash
       - name: Build example image
         run: |
-          cd $GITHUB_WORKSPACE/packer-builder-arm
+          cd $GITHUB_WORKSPACE/packer/plugins/packer-builder-arm
           packer build boards/raspberry-pi-4/ubuntu_server_20.04_arm64.pkr.hcl
         shell: bash
   
