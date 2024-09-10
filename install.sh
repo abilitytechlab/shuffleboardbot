@@ -11,10 +11,12 @@ if id "pi" &>/dev/null; then
 else
   useradd -m pi
   usermod -aG sudo pi
-  echo "pi:raspberry" | chpasswd
 fi
+echo "pi:raspberry" | chpasswd
 
 # Enable ssh for pi user
+pwd
+ls -la
 mkdir /home/pi/.ssh
 touch /home/pi/.ssh/authorized_keys
 cat id_rsa.pub >> /home/pi/.ssh/authorized_keys
