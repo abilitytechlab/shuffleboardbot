@@ -1,11 +1,12 @@
 name: build
 
 on: [workflow_dispatch]
-
+env:
+  PACKER_CONFIG_DIR: 
 jobs:
   build:
     name: build
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
         with:
@@ -13,9 +14,18 @@ jobs:
       - name: Setup `packer`
         uses: hashicorp/setup-packer@main
         id: setup
-      - name: Run `packer init`
-        id: init
-        run: "packer init ./template.pkr.hcl"
-      - name: Run `packer validate`
-        id: validate
-        run: "packer validate ./template.pkr.hcl"
+      - name: Setup arm packer prerequisites
+        run: sudo apt-get install qemu-user-static go -y
+      - name: Build packer-builder-arm
+        run: |
+          git clone https://github.com/mkaczanowski/packer-builder-arm
+          cd packer-builder-arm
+          go mod download
+          go build
+      - name: Build example image
+        run: |
+          packer build boards/raspberry-pi-4/ubuntu_server_20.04_arm64.pkr.hcl
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: ubuntu-20.04.img
