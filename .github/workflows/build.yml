@@ -31,7 +31,6 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install tree fdisk gdisk qemu-user-static libarchive-tools psmisc tar autoconf make qemu-utils zip
-        shell: bash
 
       # Install packer arm plugin
       - name: Install packer-builder-arm
@@ -40,18 +39,15 @@ jobs:
           cd plugin
           go mod download
           go build
-        shell: bash
       - name: init example image
         run: |
           cp plugin/packer-builder-arm .
           sudo packer build packer_test.json
-        shell: bash
 
       - name: List dir
         run: |
           pwd
           ls -la
-        shell: bash
       # - name: Upload artifacts
       #   uses: actions/upload-artifact@v2
       #   with:
