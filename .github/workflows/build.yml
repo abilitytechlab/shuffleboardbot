@@ -18,11 +18,9 @@ jobs:
           sudo apt-get update
           sudo apt-get install golang-go        
           sudo apt-get install qemu-user-static
-      - uses: actions/checkout@v3
-        with:
-          repository: 'mkaczanowski/packer-builder-arm'
       - name: Build packer-builder-arm
         run: |
+          git clone https://github.com/mkaczanowski/packer-builder-arm.git
           cd packer-builder-arm
           go mod download
           go build
