@@ -11,15 +11,15 @@ jobs:
           path: src
       - name: Build
         run: docker run --rm --privileged -v /dev:/dev -v ${PWD}:/build mkaczanowski/packer-builder-arm build src/packer_test.json
-      # - name: Install PiShrink
-      #   run: |
-      #     wget https://raw.githubusercontent.com/Drewsif/PiShrink/master/pishrink.sh
-      #     chmod +x pishrink.sh
-      #     sudo mv pishrink.sh /usr/local/bin
-      # - name: Shrink img
-      #   run: sudo pishrink.sh -a -Z -v test.img
-      # - name: Upload artifacts
-      #   uses: actions/upload-artifact@v2
-      #   with:
-      #     name: img
-      #     path: test.img.xz
+      - name: Install PiShrink
+        run: |
+          wget https://raw.githubusercontent.com/Drewsif/PiShrink/master/pishrink.sh
+          chmod +x pishrink.sh
+          sudo mv pishrink.sh /usr/local/bin
+      - name: Shrink img
+        run: sudo pishrink.sh -a -Z -v test.img
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: img
+          path: test.img.xz

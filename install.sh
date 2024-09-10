@@ -38,6 +38,8 @@ chown -R sjoeluser:sjoeluser /opt/sjoel
 chown -R sjoeluser:sjoeluser /var/log/sjoelserver
 
 # Install dependencies
+apt-get install -y software-properties-common
+apt-get update
 add-apt-repository ppa:deadsnakes/ppa
 apt-get update
 apt-get -y upgrade
