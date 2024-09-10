@@ -34,22 +34,19 @@ jobs:
       # Install packer arm plugin
       - name: Install packer-builder-arm
         run: |
-          mkdir -p $GITHUB_WORKSPACE/packer/plugins
-          cd $GITHUB_WORKSPACE/packer/plugins
-          git clone https://github.com/mkaczanowski/packer-builder-arm
-          cd packer-builder-arm
+          git clone https://github.com/mkaczanowski/packer-builder-arm plugin
+          cd plugin
           go mod download
-          go build .
+          go build
         shell: bash
       - name: init example image
         run: |
-          cd $GITHUB_WORKSPACE/packer/plugins/packer-builder-arm
-          packer init boards/raspberry-pi-4/ubuntu_server_20.04_arm64.pkr.hcl
+          cp plugin/packer-builder-arm .
+          packer init plugin/boards/raspberry-pi-4/ubuntu_server_20.04_arm64.pkr.hcl
         shell: bash
       - name: Build example image
         run: |
-          cd $GITHUB_WORKSPACE/packer/plugins/packer-builder-arm
-          packer build boards/raspberry-pi-4/ubuntu_server_20.04_arm64.pkr.hcl
+          packer build plugin/boards/raspberry-pi-4/ubuntu_server_20.04_arm64.pkr.hcl
         shell: bash
   
       - name: Upload artifacts
