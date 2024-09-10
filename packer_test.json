@@ -13,7 +13,7 @@
         "file_checksum_type": "sha256",
         "file_target_extension": "xz",
         "image_build_method": "resize",
-        "image_path": "grampsweb-2022-09-22-raspios-bullseye-arm64-lite.img",
+        "image_path": "test.img",
         "image_size": "2G",
         "image_type": "dos",
         "image_partitions": [
