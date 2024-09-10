@@ -22,7 +22,9 @@ jobs:
       #     cd packer-builder-arm
       #     go mod download
       #     go build
-
+      - uses: actions/setup-go@v2.1.3
+        with:
+          go-version: "1.18"
       
     # Install dependencies for packer
       - name: Install dependencies
@@ -43,9 +45,6 @@ jobs:
         run: |
           cp plugin/packer-builder-arm .
           packer init plugin/boards/raspberry-pi-4/ubuntu_server_20.04_arm64.pkr.hcl
-        shell: bash
-      - name: Build example image
-        run: |
           packer build plugin/boards/raspberry-pi-4/ubuntu_server_20.04_arm64.pkr.hcl
         shell: bash
   
