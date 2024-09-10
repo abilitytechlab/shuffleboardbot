@@ -9,8 +9,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
       - name: Setup `packer`
         uses: hashicorp/setup-packer@main
         id: setup
@@ -20,16 +18,18 @@ jobs:
           sudo apt-get update
           sudo apt-get install golang-go        
           sudo apt-get install qemu-user-static
+      - uses: actions/checkout@v3
+        with:
+          repository: 'packer-builder-arm'
       - name: Build packer-builder-arm
         run: |
-          git clone https://github.com/mkaczanowski/packer-builder-arm
           cd packer-builder-arm
           go mod download
           go build
       - name: Build example image
         run: |
           cd packer-builder-arm
-          packer init
+          packer init boards/raspberry-pi-4/ubuntu_server_20.04_arm64.pkr.hcl
           packer build boards/raspberry-pi-4/ubuntu_server_20.04_arm64.pkr.hcl
       - name: Upload artifacts
         uses: actions/upload-artifact@v2
