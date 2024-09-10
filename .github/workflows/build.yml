@@ -24,11 +24,15 @@ jobs:
           cd packer-builder-arm
           go mod download
           go build
-      - name: Build example image
+      - name: init example image
         run: |
           cd packer-builder-arm
           packer init boards/raspberry-pi-4/ubuntu_server_20.04_arm64.pkr.hcl
+      - name: Build example image
+        run: |
+          cd packer-builder-arm
           packer build boards/raspberry-pi-4/ubuntu_server_20.04_arm64.pkr.hcl
+  
       - name: Upload artifacts
         uses: actions/upload-artifact@v2
         with:
