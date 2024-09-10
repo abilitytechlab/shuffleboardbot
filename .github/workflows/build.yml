@@ -29,6 +29,7 @@ jobs:
       - name: Build example image
         run: |
           cd packer-builder-arm
+          packer init
           packer build boards/raspberry-pi-4/ubuntu_server_20.04_arm64.pkr.hcl
       - name: Upload artifacts
         uses: actions/upload-artifact@v2
