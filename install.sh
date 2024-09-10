@@ -1,5 +1,8 @@
 #!/bin/bash
 set -e
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+echo "Script directory: $SCRIPT_DIR"
+
 if [ "$EUID" -ne 0 ]
   then echo "Please run as root"
   exit
@@ -17,7 +20,7 @@ echo "pi:raspberry" | chpasswd
 # Enable ssh for pi user
 mkdir /home/pi/.ssh
 touch /home/pi/.ssh/authorized_keys
-cat /tmp/src/id_rsa.pub >> /home/pi/.ssh/authorized_keys
+cat $SCRIPT_DIR/id_rsa.pub >> /home/pi/.ssh/authorized_keys
 
 # Disable password login
 sed -i 's/#PasswordAuthentication yes/PasswordAuthentication no/g' /etc/ssh/sshd_config
@@ -25,7 +28,7 @@ systemctl restart ssh
 
 # Create directories and copy files
 mkdir /opt/sjoel
-cp -r . /opt/sjoel
+cp -r $SCRIPT_DIR /opt/sjoel
 cd /opt/sjoel
 mkdir -p /var/log/sjoelserver
 
