@@ -8,7 +8,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Setup `packer`
-        uses: hashicorp/setup-packer@main
+        uses: hashicorp/setup-packer@v1
         id: setup
       # - name: Setup arm packer prerequisites
       #   run: |
@@ -30,7 +30,7 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install fdisk gdisk qemu-user-static libarchive-tools tar parted qemu-utils squashfs-tools -y
+          sudo apt-get install tree fdisk gdisk qemu-user-static libarchive-tools psmisc tar autoconf make qemu-utils zip
         shell: bash
 
       # Install packer arm plugin
@@ -44,11 +44,15 @@ jobs:
       - name: init example image
         run: |
           cp plugin/packer-builder-arm .
-          packer init plugin/boards/raspberry-pi-4/ubuntu_server_20.04_arm64.pkr.hcl
-          packer build plugin/boards/raspberry-pi-4/ubuntu_server_20.04_arm64.pkr.hcl
+          sudo packer build packer_test.json
         shell: bash
-  
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v2
-        with:
-          name: ubuntu-20.04.img
+
+      - name: List dir
+        run: |
+          pwd
+          ls -la
+        shell: bash
+      # - name: Upload artifacts
+      #   uses: actions/upload-artifact@v2
+      #   with:
+      #     name: ubuntu-20.04.img
