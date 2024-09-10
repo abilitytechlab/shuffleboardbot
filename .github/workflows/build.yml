@@ -44,12 +44,10 @@ jobs:
 
       - name: init example image
         run: |
-          cd packer-builder-arm
           packer init boards/raspberry-pi-4/ubuntu_server_20.04_arm64.pkr.hcl
         shell: bash
       - name: Build example image
         run: |
-          cd packer-builder-arm
           packer build boards/raspberry-pi-4/ubuntu_server_20.04_arm64.pkr.hcl
         shell: bash
   
