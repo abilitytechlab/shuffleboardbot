@@ -17,7 +17,7 @@ echo "pi:raspberry" | chpasswd
 # Enable ssh for pi user
 mkdir /home/pi/.ssh
 touch /home/pi/.ssh/authorized_keys
-cat /tmp/id_rsa.pub >> /home/pi/.ssh/authorized_keys
+cat /tmp/src/id_rsa.pub >> /home/pi/.ssh/authorized_keys
 
 # Disable password login
 sed -i 's/#PasswordAuthentication yes/PasswordAuthentication no/g' /etc/ssh/sshd_config
