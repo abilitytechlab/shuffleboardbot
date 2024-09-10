@@ -11,10 +11,6 @@ jobs:
           path: src
       - name: Build
         run: docker run --rm --privileged -v /dev:/dev -v ${PWD}:/build mkaczanowski/packer-builder-arm build src/packer_test.json
-      - name: Debug
-        run: |
-          ls -la src
-          ls -la
       # - name: Install PiShrink
       #   run: |
       #     wget https://raw.githubusercontent.com/Drewsif/PiShrink/master/pishrink.sh

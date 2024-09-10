@@ -5,6 +5,24 @@ if [ "$EUID" -ne 0 ]
   exit
 fi
 
+# Create pi user if it does not exist
+if id "pi" &>/dev/null; then
+  echo "User pi already exists"
+else
+  useradd -m pi
+  usermod -aG sudo pi
+  echo "pi:raspberry" | chpasswd
+fi
+
+# Enable ssh for pi user
+mkdir /home/pi/.ssh
+touch /home/pi/.ssh/authorized_keys
+cat id_rsa.pub >> /home/pi/.ssh/authorized_keys
+
+# Disable password login
+sed -i 's/#PasswordAuthentication yes/PasswordAuthentication no/g' /etc/ssh/sshd_config
+systemctl restart ssh
+
 # Create directories and copy files
 mkdir /opt/sjoel
 cp -r . /opt/sjoel
