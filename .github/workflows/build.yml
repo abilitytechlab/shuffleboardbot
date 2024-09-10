@@ -10,26 +10,48 @@ jobs:
       - name: Setup `packer`
         uses: hashicorp/setup-packer@main
         id: setup
-      - name: Setup arm packer prerequisites
+      # - name: Setup arm packer prerequisites
+      #   run: |
+      #     sudo add-apt-repository ppa:longsleep/golang-backports
+      #     sudo apt-get update
+      #     sudo apt-get install golang-go        
+      #     sudo apt-get install qemu-user-static
+      # - name: Build packer-builder-arm
+      #   run: |
+      #     git clone https://github.com/mkaczanowski/packer-builder-arm.git
+      #     cd packer-builder-arm
+      #     go mod download
+      #     go build
+
+      
+    # Install dependencies for packer
+      - name: Install dependencies
         run: |
-          sudo add-apt-repository ppa:longsleep/golang-backports
           sudo apt-get update
-          sudo apt-get install golang-go        
-          sudo apt-get install qemu-user-static
-      - name: Build packer-builder-arm
+          sudo apt-get install fdisk gdisk qemu-user-static libarchive-tools tar parted qemu-utils squashfs-tools -y
+        shell: bash
+
+      # Install packer arm plugin
+      - name: Install packer-builder-arm
         run: |
-          git clone https://github.com/mkaczanowski/packer-builder-arm.git
+          mkdir -p $GITHUB_WORKSPACE/packer/plugins
+          cd $GITHUB_WORKSPACE/packer/plugins
+          git clone https://github.com/mkaczanowski/packer-builder-arm
           cd packer-builder-arm
           go mod download
-          go build
+          go build -v .
+        shell: bash
+
       - name: init example image
         run: |
           cd packer-builder-arm
           packer init boards/raspberry-pi-4/ubuntu_server_20.04_arm64.pkr.hcl
+        shell: bash
       - name: Build example image
         run: |
           cd packer-builder-arm
           packer build boards/raspberry-pi-4/ubuntu_server_20.04_arm64.pkr.hcl
+        shell: bash
   
       - name: Upload artifacts
         uses: actions/upload-artifact@v2
