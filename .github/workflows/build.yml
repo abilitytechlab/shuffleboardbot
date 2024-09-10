@@ -1,8 +1,6 @@
 name: build
 
 on: [workflow_dispatch]
-env:
-  PACKER_CONFIG_DIR: 
 jobs:
   build:
     name: build
