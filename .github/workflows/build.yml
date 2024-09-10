@@ -39,7 +39,12 @@ jobs:
           git clone https://github.com/mkaczanowski/packer-builder-arm
           cd packer-builder-arm
           go mod download
-          go build -v .
+          go build .
+        shell: bash
+      - name: Print current directory
+        run: |
+          pwd
+          ls
         shell: bash
       - name: init example image
         run: |
