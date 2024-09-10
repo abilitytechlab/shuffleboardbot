@@ -18,7 +18,7 @@
             "file_target_extension": "xz",
             "image_build_method": "resize",
             "image_path": "test.img",
-            "image_size": "2G",
+            "image_size": "3G",
             "image_type": "dos",
             "image_partitions": [
                 {
