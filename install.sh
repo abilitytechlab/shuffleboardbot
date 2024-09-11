@@ -30,7 +30,6 @@ sed -i 's/#PasswordAuthentication yes/PasswordAuthentication no/g' /etc/ssh/sshd
 # Create directories and copy files
 mkdir /opt/sjoel
 cp -r $SCRIPT_DIR /opt/sjoel
-cd /opt/sjoel
 mkdir -p /var/log/sjoelserver
 
 # Create user and set permissions
@@ -43,18 +42,15 @@ chown -R sjoeluser:sjoeluser /var/log/sjoelserver
 # apt-get -y install software-properties-common python3-launchpadlib
 # apt-get update
 # add-apt-repository ppa:deadsnakes/ppa
-echo "Updating"
 apt-get update
-echo "Upgrading"
 apt-get -y upgrade
 echo "Installing dependencies"
 apt-get -y install python3.11 pigpio python3-pigpio
 
-echo "Python stuff"
 # Create venv
-python3.11 -m venv venv
-source venv/bin/activate
-pip install -r requirements.txt
+python3.11 -m venv /opt/sjoel/venv
+source /opt/sjoel/venv/bin/activate
+pip install -r /opt/sjoel/requirements.txt
 pip install gunicorn
 
 # Set up wifi hotspot
@@ -66,7 +62,7 @@ nmcli con modify Hotspot connection.autoconnect true
 nmcli con up Hotspot
 
 # Install service
-cp sjoel.service /etc/systemd/system/
+cp /opt/sjoel/sjoel.service /etc/systemd/system/
 systemctl enable pigpiod.service
 systemctl enable sjoel.service
 systemctl daemon-reload
