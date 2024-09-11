@@ -13,4 +13,3 @@ StandardError=file:/var/log/sjoelserver/error.log
 
 [Install]
 WantedBy=multi-user.target
-After=pigpiod

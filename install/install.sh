@@ -57,11 +57,9 @@ pip install gunicorn
 cp /opt/sjoel/install/setup_wifi.service /etc/systemd/system/
 cp /opt/sjoel/install/setup_wifi.sh /usr/local/bin/
 chmod +x /usr/local/bin/setup_wifi.sh
-systemctl daemon-reload
 systemctl enable setup_wifi.service
 
 # Install service
 cp /opt/sjoel/install/sjoel.service /etc/systemd/system/
-systemctl daemon-reload
 systemctl enable pigpiod.service
 systemctl enable sjoel.service
