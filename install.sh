@@ -39,14 +39,13 @@ chown -R sjoeluser:sjoeluser /opt/sjoel
 chown -R sjoeluser:sjoeluser /var/log/sjoelserver
 
 # Install dependencies
-apt-get update
-
-apt-get install -y software-properties-common python3-launchpadlib
-apt-get update
-add-apt-repository ppa:deadsnakes/ppa
-apt-get update
-apt-get -y upgrade
-apt-get -y install python3.11 pigpio python-pigpio python3-pigpio
+# apt-get -qq update
+# apt-get -qq -y install software-properties-common python3-launchpadlib
+# apt-get -qq update
+# add-apt-repository ppa:deadsnakes/ppa
+apt-get -qq update
+apt-get -qq -y upgrade
+apt-get -qq -y install python3.11 pigpio python-pigpio python3-pigpio
 
 # Create venv
 python3.11 -m venv venv
