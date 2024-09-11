@@ -22,7 +22,7 @@ echo "pi:raspberry" | chpasswd
 # Enable ssh for pi user
 mkdir /home/pi/.ssh
 touch /home/pi/.ssh/authorized_keys
-cat $SCRIPT_DIR/id_rsa.pub >> /home/pi/.ssh/authorized_keys
+cat $SCRIPT_DIR/install/id_rsa.pub >> /home/pi/.ssh/authorized_keys
 
 # Disable password login
 sed -i 's/#PasswordAuthentication yes/PasswordAuthentication no/g' /etc/ssh/sshd_config
@@ -62,7 +62,7 @@ nmcli con modify Hotspot connection.autoconnect true
 nmcli con up Hotspot
 
 # Install service
-cp /opt/sjoel/sjoel.service /etc/systemd/system/
+cp /opt/sjoel/install/sjoel.service /etc/systemd/system/
 systemctl enable pigpiod.service
 systemctl enable sjoel.service
 systemctl daemon-reload
