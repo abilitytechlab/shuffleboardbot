@@ -39,6 +39,8 @@ chown -R sjoeluser:sjoeluser /opt/sjoel
 chown -R sjoeluser:sjoeluser /var/log/sjoelserver
 
 # Install dependencies
+apt-get update
+
 apt-get install -y software-properties-common python3-launchpadlib
 apt-get update
 add-apt-repository ppa:deadsnakes/ppa
