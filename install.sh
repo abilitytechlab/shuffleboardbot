@@ -5,6 +5,8 @@ export DEBIAN_FRONTEND="noninteractive"
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 echo "Script directory: $SCRIPT_DIR"
 
+ls -la $SCRIPT_DIR
+
 if [ "$EUID" -ne 0 ]
   then echo "Please run as root"
   exit
@@ -30,6 +32,7 @@ sed -i 's/#PasswordAuthentication yes/PasswordAuthentication no/g' /etc/ssh/sshd
 # Create directories and copy files
 mkdir /opt/sjoel
 cp -r $SCRIPT_DIR /opt/sjoel
+ls -la /opt/sjoel
 mkdir -p /var/log/sjoelserver
 
 # Create user and set permissions
@@ -42,10 +45,10 @@ chown -R sjoeluser:sjoeluser /var/log/sjoelserver
 # apt-get -y install software-properties-common python3-launchpadlib
 # apt-get update
 # add-apt-repository ppa:deadsnakes/ppa
-apt-get update
-apt-get -y upgrade
-echo "Installing dependencies"
-apt-get -y install python3.11 pigpio python3-pigpio
+# apt-get update
+# apt-get -y upgrade
+# echo "Installing dependencies"
+# apt-get -y install python3.11 pigpio python3-pigpio
 
 # Create venv
 python3.11 -m venv /opt/sjoel/venv
