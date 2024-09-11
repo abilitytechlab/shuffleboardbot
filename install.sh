@@ -30,6 +30,9 @@ sed -i 's/#PasswordAuthentication yes/PasswordAuthentication no/g' /etc/ssh/sshd
 # Create directories and copy files
 mkdir /opt/sjoel
 cp -r $SCRIPT_DIR/ /opt/sjoel
+echho "Contents of /opt/sjoel:"
+ls -la /opt/sjoel
+
 mkdir -p /var/log/sjoelserver
 
 # Create user and set permissions
