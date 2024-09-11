@@ -53,16 +53,15 @@ source /opt/sjoel/venv/bin/activate
 pip install -r /opt/sjoel/requirements.txt
 pip install gunicorn
 
-# Set up wifi hotspot
-nmcli con add type wifi ifname wlan0 con-name Hotspot autoconnect yes ssid Sjoelbak
-nmcli con modify Hotspot 802-11-wireless.mode ap 802-11-wireless.band bg ipv4.method shared
-nmcli con modify Hotspot wifi-sec.key-mgmt wpa-psk
-nmcli con modify Hotspot wifi-sec.psk "LekkerSjoelen123"
-nmcli con modify Hotspot connection.autoconnect true
-nmcli con up Hotspot
+# Set up wifi hotspot service, needs to run on next startup doesnt work in packer
+cp /opt/sjoel/install/setup_wifi.service /etc/systemd/system/
+cp /opt/sjoel/install/setup_wifi.sh /usr/local/bin/
+chmod +x /usr/local/bin/setup_wifi.sh
+systemctl daemon-reload
+systemctl enable setup_wifi.service
 
 # Install service
 cp /opt/sjoel/install/sjoel.service /etc/systemd/system/
+systemctl daemon-reload
 systemctl enable pigpiod.service
 systemctl enable sjoel.service
-systemctl daemon-reload

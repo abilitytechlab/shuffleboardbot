@@ -1,0 +1,11 @@
+[Unit]
+Description=Set up Wi-Fi Access Point on first boot
+After=network.target
+
+[Service]
+ExecStart=/usr/local/bin/setup_wifi.sh
+Type=oneshot
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
