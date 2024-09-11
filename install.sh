@@ -48,7 +48,7 @@ apt-get update
 echo "Upgrading"
 apt-get -y upgrade
 echo "Installing dependencies"
-apt-get -y install python3.11 pigpio python-pigpio python3-pigpio
+apt-get -y install python3.11 pigpio python3-pigpio
 
 echo "Python stuff"
 # Create venv
