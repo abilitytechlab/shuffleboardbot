@@ -24,7 +24,6 @@ cat $SCRIPT_DIR/id_rsa.pub >> /home/pi/.ssh/authorized_keys
 
 # Disable password login
 sed -i 's/#PasswordAuthentication yes/PasswordAuthentication no/g' /etc/ssh/sshd_config
-systemctl restart ssh
 
 # Create directories and copy files
 mkdir /opt/sjoel
@@ -61,8 +60,6 @@ nmcli con up Hotspot
 
 # Install service
 cp sjoel.service /etc/systemd/system/
-systemctl daemon-reload
 systemctl enable pigpiod.service
-systemctl start pigpiod.service
 systemctl enable sjoel.service
-systemctl start sjoel.service
+systemctl daemon-reload
