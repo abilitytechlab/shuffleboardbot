@@ -22,14 +22,14 @@ echo "pi:raspberry" | chpasswd
 # Enable ssh for pi user
 mkdir /home/pi/.ssh
 touch /home/pi/.ssh/authorized_keys
-cat $SCRIPT_DIR/install/id_rsa.pub >> /home/pi/.ssh/authorized_keys
+cat $SCRIPT_DIR/id_rsa.pub >> /home/pi/.ssh/authorized_keys
 
 # Disable password login
 sed -i 's/#PasswordAuthentication yes/PasswordAuthentication no/g' /etc/ssh/sshd_config
 
 # Create directories and copy files
 mkdir /opt/sjoel
-cp -r $SCRIPT_DIR/* /opt/sjoel
+cp -r $SCRIPT_DIR/../* /opt/sjoel
 mkdir -p /var/log/sjoelserver
 
 # Create user and set permissions
