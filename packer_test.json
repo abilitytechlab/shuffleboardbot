@@ -1,7 +1,4 @@
 {
-    "variables": {
-        "apt_packages": "software-properties-common apt-transport-https ca-certificates openssl ufw curl docker-compose"
-    },
     "builders": [
         {
             "type": "arm",
