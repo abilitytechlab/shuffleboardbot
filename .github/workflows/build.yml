@@ -17,10 +17,8 @@ jobs:
             key: ${{ runner.os }}-${{ hashFiles('src/install/packer_test.json') }}
       - name: Build
         run: docker run --rm --privileged -v /dev:/dev -v ${PWD}:/build mkaczanowski/packer-builder-arm build src/install/packer_test.json
-      - name: Compress image
-        run: xz -z -v test.img
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: Compressed image
-          path: test.img.xz
+          name: image
+          path: test.img
