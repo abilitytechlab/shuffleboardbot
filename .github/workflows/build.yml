@@ -18,7 +18,7 @@ jobs:
       - name: Build
         run: docker run --rm --privileged -v /dev:/dev -v ${PWD}:/build mkaczanowski/packer-builder-arm build src/install/packer_test.json
       - name: Compress image
-        run: xz -z test.img
+        run: xz -z -v -T test.img
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
