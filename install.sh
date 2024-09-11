@@ -5,8 +5,6 @@ export DEBIAN_FRONTEND="noninteractive"
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 echo "Script directory: $SCRIPT_DIR"
 
-ls -la $SCRIPT_DIR
-
 if [ "$EUID" -ne 0 ]
   then echo "Please run as root"
   exit
@@ -31,8 +29,7 @@ sed -i 's/#PasswordAuthentication yes/PasswordAuthentication no/g' /etc/ssh/sshd
 
 # Create directories and copy files
 mkdir /opt/sjoel
-cp -r $SCRIPT_DIR /opt/sjoel
-ls -la /opt/sjoel
+cp -r $SCRIPT_DIR/ /opt/sjoel
 mkdir -p /var/log/sjoelserver
 
 # Create user and set permissions
