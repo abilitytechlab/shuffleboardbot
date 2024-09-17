@@ -32,11 +32,6 @@ mkdir /opt/sjoel
 cp -r $SCRIPT_DIR/../* /opt/sjoel
 mkdir -p /var/log/sjoelserver
 
-# Create user and set permissions
-useradd --system --no-create-home sjoeluser
-chown -R sjoeluser:sjoeluser /opt/sjoel
-chown -R sjoeluser:sjoeluser /var/log/sjoelserver
-
 # Install dependencies
 # apt-get update
 # apt-get -y install software-properties-common python3-launchpadlib
@@ -52,6 +47,12 @@ python3.11 -m venv /opt/sjoel/venv
 source /opt/sjoel/venv/bin/activate
 pip install -r /opt/sjoel/requirements.txt
 pip install gunicorn
+
+# Create user and set permissions
+useradd --system --no-create-home sjoeluser
+chown -R sjoeluser:sjoeluser /opt/sjoel
+chown -R sjoeluser:sjoeluser /var/log/sjoelserver
+usermod -a -G video sjoeluser
 
 # Set up wifi hotspot service, needs to run on next startup doesnt work in packer
 cp /opt/sjoel/install/setup_wifi.service /etc/systemd/system/
