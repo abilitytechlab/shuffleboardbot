@@ -1,10 +1,7 @@
 #!/bin/bash
 
 # Add Wi-Fi AP configuration
-nmcli con add type wifi ifname wlan0 con-name Hotspot autoconnect yes ssid Sjoelbak
-nmcli con modify Hotspot 802-11-wireless.mode ap 802-11-wireless.band bg ipv4.method shared
-nmcli con modify Hotspot wifi-sec.key-mgmt none
-nmcli con modify Hotspot connection.autoconnect true
+nmcli connection add type wifi con-name "TestBoris" autoconnect yes wifi.mode ap wifi.ssid "Borisss" ipv4.method shared ipv6.method shared
 nmcli con up Hotspot
 
 
