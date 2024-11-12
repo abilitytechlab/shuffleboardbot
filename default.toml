@@ -2,6 +2,7 @@ fire_servo_range = [65, 150] #90 is onder de buis
 fire_delay = 1.0
 stepper_range = [0, 300] # tweak this not sure about the range, was not used in old code
 communicator = "raw"
+shutdown_pin = 17
 
 [gcode]
 port = "COM8"

@@ -1,10 +1,11 @@
 import argparse
+import time
 
 from communicator.communicator_mock import MockCommunicator
 from communicator.communicator_serial import SerialCommunicator
 from controller.sjoel_controller_gcode import SjoelControllerGcode
 from server.sjoel_server_socket import SjoelServerSocket
-from settings.device_settings import CommunicatorType
+from settings.device_settings import CommunicatorType, DeviceSettings
 from settings.hosting_settings import HostingSettings
 
 
@@ -59,8 +60,32 @@ def create_app(config: HostingSettings | None = None):
         else:
             raise ValueError("Invalid communicator type")
 
+    if device_settings.shutdown_pin is not None:
+        import pigpio
+        pi = pigpio.pi()
+        pi.set_mode(device_settings.shutdown_pin, pigpio.INPUT)
+        pi.set_pull_up_down(device_settings.shutdown_pin, pigpio.PUD_DOWN)
+        pi.callback(device_settings.shutdown_pin, pigpio.RISING_EDGE, lambda: shutdown(device_settings))
+
     # Create server
     return SjoelServerSocket(controller).init()
+
+
+def shutdown(device_settings: DeviceSettings):
+    print("Shutting down")
+
+    import os
+    os.system("sudo shutdown -h now")
+
+    if device_settings.shutdown_led_pin is not None:
+        import pigpio
+        pi = pigpio.pi()
+        pi.set_mode(device_settings.shutdown_led_pin, pigpio.OUTPUT)
+        while True:
+            pi.write(device_settings.shutdown_led_pin, 1)
+            time.sleep(0.1)
+            pi.write(device_settings.shutdown_led_pin, 0)
+            time.sleep(0.1)
 
 
 if __name__ == '__main__':

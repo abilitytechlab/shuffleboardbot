@@ -1,5 +1,4 @@
 import enum
-from typing import Literal
 
 import toml
 from pydantic import BaseModel
@@ -18,6 +17,8 @@ class DeviceSettings(BaseModel):
     fire_delay: float
     stepper_range: tuple[int, int]
     communicator: CommunicatorType
+    shutdown_pin: int | None = None
+    shutdown_led_pin: int | None = None
     gcode: GcodeSettings | None = None
     raw: RawControlsSettings | None = None
 
