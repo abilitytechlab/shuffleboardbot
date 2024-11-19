@@ -14,7 +14,7 @@ stepper_steps_per_mm = 1000
 stepper_rate = 2000
 
 [raw]
-servo_pin = 18
+servo_pin = 18 # Servo bundle of three, two red, one black. Ground = black --> green. Signal = red --> purple. Vmot = red --> grey. 
 servo_frequency = 50
 servo_min_pulse = 1000
 servo_max_pulse = 2000
