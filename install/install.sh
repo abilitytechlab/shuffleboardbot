@@ -54,6 +54,9 @@ chown -R sjoeluser:sjoeluser /opt/sjoel
 chown -R sjoeluser:sjoeluser /var/log/sjoelserver
 usermod -a -G video sjoeluser
 
+# Make sure user can shutdown
+chmod 4755 /sbin/shutdown
+
 # Set up wifi hotspot service, needs to run on next startup doesnt work in packer
 cp /opt/sjoel/install/setup_wifi.service /etc/systemd/system/
 cp /opt/sjoel/install/setup_wifi.sh /usr/local/bin/
