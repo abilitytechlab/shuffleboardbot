@@ -4,6 +4,7 @@ import toml
 from pydantic import BaseModel
 
 from settings.gcode_settings import GcodeSettings
+from settings.joystick_settings import JoystickSettings
 from settings.raw_controls_settings import RawControlsSettings
 
 
@@ -21,6 +22,7 @@ class DeviceSettings(BaseModel):
     shutdown_led_pin: int | None = None
     gcode: GcodeSettings | None = None
     raw: RawControlsSettings | None = None
+    joystick: JoystickSettings | None = None
 
     def to_toml(self):
         """

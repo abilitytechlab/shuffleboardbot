@@ -92,7 +92,7 @@ class SjoelServerSocket(SjoelServerAbc):
 
         @self.socketio.on('join')
         def join(username):
-            print(f"User {username} joined")
+            print(f"User {username} joined", flush=True)
             self.usernames[request.sid] = username
             self.socketio.emit('users', list(self.usernames.values()))
 
@@ -113,13 +113,13 @@ class SjoelServerSocket(SjoelServerAbc):
                 return
 
             # Set the new leader
-            print(f"User {username} is the new leader")
+            print(f"User {username} is the new leader", flush=True)
             self.leader = new_leader
             self.socketio.emit('leader', username)
 
         @self.socketio.on('connect')
         def connect():
-            print('client connected')
+            print('client connected', flush=True)
 
         @self.socketio.on('disconnect')
         def disconnect():
@@ -128,7 +128,7 @@ class SjoelServerSocket(SjoelServerAbc):
                 return
 
             # Remove the user
-            print(f"User {username} disconnected")
+            print(f"User {username} disconnected", flush=True)
             del self.usernames[request.sid]
 
             # If the leader disconnects, set the leader to the next user

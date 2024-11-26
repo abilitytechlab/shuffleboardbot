@@ -30,7 +30,7 @@ class SjoelControllerGcode(SjoelControllerBase):
         
 
     def fire(self):
-        print("fire")
+        print("fire", flush=True)
         """
         Fire the sjoelbak, first turns on the fan
         which turns on the firing motors via a relay

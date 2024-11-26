@@ -4,6 +4,7 @@ import time
 from communicator.communicator_mock import MockCommunicator
 from communicator.communicator_serial import SerialCommunicator
 from controller.sjoel_controller_gcode import SjoelControllerGcode
+from joystick.sjoel_joystick_simple import SjoelJoystickSimple
 from server.sjoel_server_socket import SjoelServerSocket
 from settings.device_settings import CommunicatorType, DeviceSettings
 from settings.hosting_settings import HostingSettings
@@ -31,34 +32,38 @@ def create_app(config: HostingSettings | None = None):
             with open('config.toml') as f:
                 config = HostingSettings.from_toml(f.read())
         except FileNotFoundError:
-            print("Hosting settings not found")
+            print("Hosting settings not found", flush=True)
             exit(1)
 
     # Load device settings
     try:
         device_settings = config.get_device_settings()
     except FileNotFoundError:
-        print("Device settings not found")
+        print("Device settings not found", flush=True)
         exit(1)
 
     # Create controller
     if config.mock:
-        print("Mock communicator enabled")
+        print("Mock communicator enabled", flush=True)
         communicator = MockCommunicator()
         controller = SjoelControllerGcode(device_settings, communicator)
     else:
         if device_settings.communicator == CommunicatorType.GCODE:
-            print("Gcode communicator enabled")
+            print("Gcode communicator enabled", flush=True)
             communicator = SerialCommunicator(device_settings.gcode.port, device_settings.gcode.baudrate)
             controller = SjoelControllerGcode(device_settings, communicator)
         elif device_settings.communicator == CommunicatorType.RAW:
             from communicator.communicator_raw import CommunicatorRaw
             from controller.sjoel_controller_raw import SjoelControllerRaw
-            print("Raw communicator enabled")
+            print("Raw communicator enabled", flush=True)
             communicator = CommunicatorRaw(device_settings.raw)
             controller = SjoelControllerRaw(device_settings, communicator)
         else:
             raise ValueError("Invalid communicator type")
+
+    if device_settings.joystick is not None:
+        print(f"Joystick enabled", flush=True)
+        joystick = SjoelJoystickSimple(controller, device_settings.joystick)
 
     if device_settings.shutdown_pin is not None:
         import pigpio
@@ -72,10 +77,10 @@ def create_app(config: HostingSettings | None = None):
 
 
 def shutdown(device_settings: DeviceSettings):
-    print("Shutting down")
+    print("Shutting down", flush=True)
 
     import os
-    os.system("sudo shutdown -h now")
+    os.system("shutdown -h now")
 
     if device_settings.shutdown_led_pin is not None:
         import pigpio
