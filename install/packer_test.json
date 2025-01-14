@@ -64,6 +64,7 @@
         {
             "type": "shell",
             "inline": [
+                "apt-get update",
                 "apt-get install git -y",
                 "git clone https://github.com/nodogsplash/nodogsplash.git"
             ]
