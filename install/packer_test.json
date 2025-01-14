@@ -60,6 +60,18 @@
             "inline": [
                 "touch /boot/ssh"
             ]
+        },
+        {
+            "type": "shell",
+            "inline": [
+                "apt install git",
+                "git clone https://github.com/nodogsplash/nodogsplash.git",
+                "cd nodogsplash",
+                "apk add build-base linux-headers libmicrohttpd-dev iptables",
+                "make",
+                "make install",
+                "lbu add /usr/bin/nodogsplash /usr/bin/ndsctl"
+            ]
         }
     ]
 }
