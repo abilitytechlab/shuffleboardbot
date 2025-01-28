@@ -1,9 +1,6 @@
-import enum
-
 import toml
 from pydantic import BaseModel
 
-from settings.gcode_settings import GcodeSettings
 from settings.joystick_settings import JoystickSettings
 from settings.raw_controls_settings import RawControlsSettings
 

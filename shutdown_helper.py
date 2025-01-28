@@ -1,6 +1,6 @@
-import time
 import os
 import threading
+import time
 
 
 class ShutdownHelper:

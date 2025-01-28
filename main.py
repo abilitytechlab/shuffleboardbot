@@ -1,12 +1,12 @@
 import argparse
 import time
 
+from communicator.communicator_raw import CommunicatorRaw
+from controller.sjoel_controller_raw import SjoelControllerRaw
 from joystick.sjoel_joystick_simple import SjoelJoystickSimple
 from server.sjoel_server_socket import SjoelServerSocket
 from settings.device_settings import DeviceSettings
 from settings.hosting_settings import HostingSettings
-from communicator.communicator_raw import CommunicatorRaw
-from controller.sjoel_controller_raw import SjoelControllerRaw
 
 
 def parse_hosting_settings() -> HostingSettings:
@@ -15,13 +15,11 @@ def parse_hosting_settings() -> HostingSettings:
     parser.add_argument('--interface', default='0.0.0.0', type=str,
                         help='Override interface to listen on, default: 0.0.0.0')
     parser.add_argument('--port', default=5000, type=int, help='Override port to listen on, default: 5000')
-    parser.add_argument('--serial', type=str, help='Override the serial port the robot is connected to')
-    parser.add_argument('--baud', type=int, help='Override the baud rate of the serial connection')
     parser.add_argument('--debug', help='Enables debug logging', action='store_true')
     parser.add_argument('--mock', help='Enables the mock controller', action='store_true')
     args = parser.parse_args()
 
-    return HostingSettings(args.config, args.interface, args.port, args.debug, args.mock, args.serial, args.baud)
+    return HostingSettings(args.config, args.interface, args.port, args.debug, args.mock)
 
 
 def create_app(config: HostingSettings | None = None):

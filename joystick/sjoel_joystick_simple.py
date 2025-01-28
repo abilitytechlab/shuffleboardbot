@@ -1,7 +1,7 @@
 import pigpio
 
 from controller.sjoel_controller_base import SjoelControllerBase, MovementDirection
-from settings.joystick_settings import JoystickSettings, PullDirection
+from settings.joystick_settings import JoystickSettings
 
 
 class SjoelJoystickSimple:

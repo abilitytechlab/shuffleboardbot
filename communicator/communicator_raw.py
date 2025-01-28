@@ -1,7 +1,8 @@
-import time
 import threading
+import time
 
-import mygpio as pigpio
+# import mygpio as pigpio
+import pigpio
 
 from controller.sjoel_controller_base import MovementDirection
 from settings.raw_controls_settings import RawControlsSettings
