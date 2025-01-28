@@ -9,14 +9,18 @@ class SjoelJoystickSimple:
         self.controller = controller
         self.pi = pigpio.pi()
 
-        pull_mode = pigpio.PUD_UP if settings.pull_direction == PullDirection.UP else pigpio.PUD_DOWN
-        self.pi.set_pull_up_down(settings.pin_button, pull_mode)
-        self.pi.set_pull_up_down(settings.pin_left, pull_mode)
-        self.pi.set_pull_up_down(settings.pin_right, pull_mode)
+        # pull_mode = pigpio.PUD_UP if settings.pull_direction == PullDirection.UP else pigpio.PUD_DOWN
+        # self.pi.set_pull_up_down(settings.pin_button, pull_mode)
+        # self.pi.set_pull_up_down(settings.pin_left, pull_mode)
+        # self.pi.set_pull_up_down(settings.pin_right, pull_mode)
 
         self.pi.set_mode(settings.pin_button, pigpio.INPUT)
         self.pi.set_mode(settings.pin_left, pigpio.INPUT)
         self.pi.set_mode(settings.pin_right, pigpio.INPUT)
+
+        self.pi.set_glitch_filter(settings.pin_button, 150)
+        self.pi.set_glitch_filter(settings.pin_left, 150)
+        self.pi.set_glitch_filter(settings.pin_right, 150)
 
         self.pi.callback(settings.pin_button, pigpio.EITHER_EDGE, self.button_callback)
         self.pi.callback(settings.pin_left, pigpio.EITHER_EDGE, self.left_callback)
