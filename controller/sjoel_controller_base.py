@@ -1,7 +1,6 @@
 import enum
 from abc import ABC, abstractmethod
 
-from communicator.communicator_abc import CommunicatorText
 from settings.device_settings import DeviceSettings
 
 
@@ -34,5 +33,20 @@ class SjoelControllerBase(ABC):
         Move the sjoelbak
         :param direction: The direction to move the sjoelbak in
         :return: The position of the sjoelbak
+        """
+        pass
+
+    @abstractmethod
+    def start_move(self, direction: MovementDirection):
+        """
+        Start moving in a certain direction.
+        Will keep moving until stop_move is called.
+        """
+        pass
+
+    @abstractmethod
+    def stop_move(self):
+        """
+        Stops moving
         """
         pass

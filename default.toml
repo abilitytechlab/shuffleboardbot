@@ -34,7 +34,7 @@ limitswitch_pin_right = 24
 limitswitch_pin_left = 23
 
 [joystick]
-pin_button = 2
-pin_left = 3
-pin_right = 4
+pin_button = 11
+pin_left = 10
+pin_right = 9
 pull_direction = "UP"

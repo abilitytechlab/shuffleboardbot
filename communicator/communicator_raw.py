@@ -1,13 +1,16 @@
 import time
+import threading
 
 import mygpio as pigpio
 
 from controller.sjoel_controller_base import MovementDirection
 from settings.raw_controls_settings import RawControlsSettings
+from shutdown_helper import ShutdownHelper
 
 
 class CommunicatorRaw:
     def __init__(self, settings: RawControlsSettings):
+        self.shutdown_helper = ShutdownHelper(4 * 3600)
         self.settings = settings
         self.pi = pigpio.pi()
         self._last_direction = None
@@ -18,6 +21,11 @@ class CommunicatorRaw:
         self.pi.set_mode(self.settings.stepper_step_pin, pigpio.OUTPUT)
         self.pi.set_mode(self.settings.stepper_direction_pin, pigpio.OUTPUT)
         self.delay = 0.0005
+
+        # Continuous stepper
+        self._current_direction = None
+        self._move_worker = threading.Thread(target=self._move)
+        self._move_worker.start()
 
         # Servo
         self.pi.set_mode(self.settings.servo_pin, pigpio.OUTPUT)
@@ -47,6 +55,7 @@ class CommunicatorRaw:
         Set the state of the stepper motor.
         Sets the enable pin to the given state.
         """
+        self.shutdown_helper.update()
         self.pi.write(self.settings.stepper_enable_pin, state)
 
     def move_stepper(self, direction: MovementDirection, steps: int):
@@ -54,6 +63,7 @@ class CommunicatorRaw:
         Move the stepper motor.
         Moves the given amount of steps in the given direction.
         """
+        self.shutdown_helper.update()
         # write direction
         direction_value = 1 if direction == MovementDirection.LEFT else 0
         self.pi.write(self.settings.stepper_direction_pin, direction_value)
@@ -79,14 +89,17 @@ class CommunicatorRaw:
         """
         Moves the servo to the given angle.
         """
+        self.shutdown_helper.update()
         pulse_width = int(self.settings.servo_min_pulse + angle * self.servo_step_size)
 
         # Make sure the pulse width is within the allowed range
         if pulse_width < self.settings.servo_min_pulse:
-            print(f"Warning: Servo pulse width {pulse_width} is below minimum {self.settings.servo_min_pulse}", flush=True)
+            print(f"Warning: Servo pulse width {pulse_width} is below minimum {self.settings.servo_min_pulse}",
+                  flush=True)
             pulse_width = self.settings.servo_min_pulse
         elif pulse_width > self.settings.servo_max_pulse:
-            print(f"Warning: Servo pulse width {pulse_width} is above maximum {self.settings.servo_max_pulse}", flush=True)
+            print(f"Warning: Servo pulse width {pulse_width} is above maximum {self.settings.servo_max_pulse}",
+                  flush=True)
             pulse_width = self.settings.servo_max_pulse
 
         # Move the servo
@@ -102,11 +115,40 @@ class CommunicatorRaw:
         self.pi.set_servo_pulsewidth(self.settings.servo_pin, pulsewidth)
 
     def set_motor_enabled(self, enabled: bool):
-        if enabled == self.motors_enabled:
-            return
-
+        self.shutdown_helper.update()
         self.motors_enabled = enabled
-        self.pi.set_PWM_dutycycle(self.settings.wheel_left_in2, 255 if enabled else 0)
+        self.pi.write(self.settings.wheel_left_in1, 1 if enabled else 0)
+        self.pi.write(self.settings.wheel_left_in2, 0)
+        self.pi.write(self.settings.wheel_right_in1, 1 if enabled else 0)
+        self.pi.write(self.settings.wheel_right_in2, 1 if enabled else 0)
+
+    def start_move(self, direction: MovementDirection):
+        self.shutdown_helper.update()
+        self._current_direction = direction
+
+    def stop_move(self):
+        self.shutdown_helper.update()
+        self._current_direction = None
+
+    def _move(self):
+        last_dir = None
+        while True:
+            if self._current_direction is not None:
+                # Write direction pin
+                if self._current_direction != last_dir:
+                    print("Changing direction")
+                    direction_value = 1 if self._current_direction == MovementDirection.LEFT else 0
+                    self.pi.write(self.settings.stepper_direction_pin, direction_value)
+                    last_dir = self._current_direction
+
+                # step
+                print(f'moving in {last_dir}')
+                self.pi.write(self.settings.stepper_step_pin, 1)
+                time.sleep(self.delay)
+                self.pi.write(self.settings.stepper_step_pin, 0)
+                time.sleep(self.delay)
+            else:
+                time.sleep(0.1)
 
     def __del__(self):
         self.set_motor_enabled(False)

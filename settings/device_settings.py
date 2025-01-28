@@ -8,19 +8,12 @@ from settings.joystick_settings import JoystickSettings
 from settings.raw_controls_settings import RawControlsSettings
 
 
-class CommunicatorType(enum.Enum):
-    GCODE = "gcode"
-    RAW = "raw"
-
-
 class DeviceSettings(BaseModel):
     fire_servo_range: tuple[int, int]
     fire_delay: float
     stepper_range: tuple[int, int]
-    communicator: CommunicatorType
     shutdown_pin: int | None = None
     shutdown_led_pin: int | None = None
-    gcode: GcodeSettings | None = None
     raw: RawControlsSettings | None = None
     joystick: JoystickSettings | None = None
 

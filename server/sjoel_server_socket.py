@@ -14,6 +14,12 @@ def generate_frames(camera_index: int, frame_container: dict):
         while True:
             ret, frame = cap.read()
             if ret:
+                height, width, _ = frame.shape
+                x_pos = width // 2
+                color = (0, 0, 255)
+                thickness = 2
+                cv2.line(frame, (x_pos, 0), (x_pos, height), color, thickness)
+
                 index = frame_container.get(camera_index, {}).get('index', 0)
                 frame_container[camera_index] = {'frame': frame, 'index': index + 1}
     finally:

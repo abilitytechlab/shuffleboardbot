@@ -30,12 +30,16 @@ class SjoelJoystickSimple:
     def left_callback(self, gpio, level, tick):
         print(f"Gpio {gpio}, level {level}, tick {tick}, left", flush=True)
         if level == 0:
-            self.controller.move(MovementDirection.LEFT)
+            self.controller.stop_move()
+        elif level == 1:
+            self.controller.start_move(MovementDirection.LEFT)
 
     def right_callback(self, gpio, level, tick):
         print(f"Gpio {gpio}, level {level}, tick {tick}, right", flush=True)
         if level == 0:
-            self.controller.move(MovementDirection.RIGHT)
+            self.controller.stop_move()
+        elif level == 1:
+            self.controller.start_move(MovementDirection.RIGHT)
 
     def close(self):
         self.pi.stop()

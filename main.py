@@ -1,13 +1,12 @@
 import argparse
 import time
 
-from communicator.communicator_mock import MockCommunicator
-from communicator.communicator_serial import SerialCommunicator
-from controller.sjoel_controller_gcode import SjoelControllerGcode
 from joystick.sjoel_joystick_simple import SjoelJoystickSimple
 from server.sjoel_server_socket import SjoelServerSocket
-from settings.device_settings import CommunicatorType, DeviceSettings
+from settings.device_settings import DeviceSettings
 from settings.hosting_settings import HostingSettings
+from communicator.communicator_raw import CommunicatorRaw
+from controller.sjoel_controller_raw import SjoelControllerRaw
 
 
 def parse_hosting_settings() -> HostingSettings:
@@ -42,24 +41,9 @@ def create_app(config: HostingSettings | None = None):
         print("Device settings not found", flush=True)
         exit(1)
 
-    # Create controller
-    if config.mock:
-        print("Mock communicator enabled", flush=True)
-        communicator = MockCommunicator()
-        controller = SjoelControllerGcode(device_settings, communicator)
-    else:
-        if device_settings.communicator == CommunicatorType.GCODE:
-            print("Gcode communicator enabled", flush=True)
-            communicator = SerialCommunicator(device_settings.gcode.port, device_settings.gcode.baudrate)
-            controller = SjoelControllerGcode(device_settings, communicator)
-        elif device_settings.communicator == CommunicatorType.RAW:
-            from communicator.communicator_raw import CommunicatorRaw
-            from controller.sjoel_controller_raw import SjoelControllerRaw
-            print("Raw communicator enabled", flush=True)
-            communicator = CommunicatorRaw(device_settings.raw)
-            controller = SjoelControllerRaw(device_settings, communicator)
-        else:
-            raise ValueError("Invalid communicator type")
+    print("Raw communicator enabled", flush=True)
+    communicator = CommunicatorRaw(device_settings.raw)
+    controller = SjoelControllerRaw(device_settings, communicator)
 
     if device_settings.joystick is not None:
         print(f"Joystick enabled", flush=True)

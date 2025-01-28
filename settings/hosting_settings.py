@@ -9,9 +9,7 @@ class HostingSettings:
                  interface: str = '0.0.0.0',
                  port: int = 5000,
                  debug: bool = False,
-                 mock: bool = False,
-                 serial: str | None = None,
-                 baud: str | None = None) -> None:
+                 mock: bool = False) -> None:
         """
         Settings for the hosting of the webserver
         :param config: Path to the config file
@@ -19,14 +17,10 @@ class HostingSettings:
         :param port: Port to listen on
         :param debug: Enables debug logging
         :param mock: Enables the mock controller
-        :param serial: Override the serial port the robot is connected to
-        :param baud: Override the baud rate of the serial connection
         """
         self.config = config
         self.debug = debug
         self.mock = mock
-        self.serial = serial
-        self.baud = baud
         self.interface = interface
         self.port = port
 

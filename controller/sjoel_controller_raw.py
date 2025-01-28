@@ -7,6 +7,12 @@ from settings.device_settings import DeviceSettings
 
 
 class SjoelControllerRaw(SjoelControllerBase):
+    def start_move(self, direction: MovementDirection):
+        self.communicator.start_move(direction)
+
+    def stop_move(self):
+        self.communicator.stop_move()
+
     def __init__(self, settings: DeviceSettings, communicator: CommunicatorRaw):
         super().__init__(settings)
         self.communicator = communicator
