@@ -20,6 +20,7 @@ class SjoelControllerRaw(SjoelControllerBase):
         self.communicator.set_servo_angle(self.settings.fire_servo_range[0])
         self.last_fire = time.time()
         self.try_stop_thread = threading.Thread(target=self.try_stop_wheels)
+        self.try_stop_thread.start()
 
     def fire(self):
         if self.is_firing:
@@ -46,7 +47,7 @@ class SjoelControllerRaw(SjoelControllerBase):
 
     def try_stop_wheels(self):
         while True:
-            if time.time() - self.last_fire > 15:
-                print("No firing activity for 15 seconds, stopping motors", flush=True)
+            if time.time() - self.last_fire > 5:
+                print("No firing activity for 5 seconds, stopping motors", flush=True)
                 self.communicator.set_motor_enabled(False)
             time.sleep(1)

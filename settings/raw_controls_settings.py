@@ -11,7 +11,8 @@ class RawControlsSettings(BaseModel):
     stepper_enable_pin: int
     stepper_direction_pin: int
     stepper_step_pin: int
-    stepper_steps: int
+    stepper_frequency: int
+    stepper_delay: float
 
     wheel_left_enable: int
     wheel_left_in1: int
@@ -20,6 +21,5 @@ class RawControlsSettings(BaseModel):
     wheel_right_in1: int
     wheel_right_in2: int
 
-    limit_pin: int
     limitswitch_pin_left: int
     limitswitch_pin_right: int

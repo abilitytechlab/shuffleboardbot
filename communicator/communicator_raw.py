@@ -65,26 +65,28 @@ class CommunicatorRaw:
         Moves the given amount of steps in the given direction.
         """
         self.shutdown_helper.update()
-        # write direction
-        direction_value = 1 if direction == MovementDirection.LEFT else 0
-        self.pi.write(self.settings.stepper_direction_pin, direction_value)
-        self._last_direction = direction
-        print(f"moving {direction}", flush=True)
-        limit_pin = self.settings.limitswitch_pin_right if direction == MovementDirection.RIGHT else self.settings.limitswitch_pin_left
+        self._current_direction = direction
+        self._move()
 
-        # write steps
-        for _ in range(steps):
-            # Check if we are allowed to move every step
-            if self.pi.read(limit_pin) == 0:
-                print("move", flush=True)
-                self.pi.write(self.settings.stepper_step_pin, 1)
-                time.sleep(self.delay)
-                self.pi.write(self.settings.stepper_step_pin, 0)
-                time.sleep(self.delay)
-
-            else:
-                print("stop", flush=True)
-                return
+        # # write direction
+        # direction_value = 1 if direction == MovementDirection.LEFT else 0
+        # self.pi.write(self.settings.stepper_direction_pin, direction_value)
+        # self._last_direction = direction
+        # print(f"moving {direction}", flush=True)
+        # limit_pin = self.settings.limitswitch_pin_right if direction == MovementDirection.RIGHT else self.settings.limitswitch_pin_left
+        #
+        # # write steps
+        # for _ in range(steps):
+        #     # Check if we are allowed to move every step
+        #     if self.pi.read(limit_pin) == 0:
+        #         print("move", flush=True)
+        #         self.pi.write(self.settings.stepper_step_pin, 1)
+        #         time.sleep(self.delay)
+        #         self.pi.write(self.settings.stepper_step_pin, 0)
+        #         time.sleep(self.delay)
+        #     else:
+        #         print("stop", flush=True)
+        #         return
 
     def set_servo_angle(self, angle: float):
         """
@@ -132,24 +134,26 @@ class CommunicatorRaw:
         self._current_direction = None
 
     def _move(self):
-        last_dir = None
-        while True:
-            if self._current_direction is not None:
-                # Write direction pin
-                if self._current_direction != last_dir:
-                    print("Changing direction")
-                    direction_value = 1 if self._current_direction == MovementDirection.LEFT else 0
-                    self.pi.write(self.settings.stepper_direction_pin, direction_value)
-                    last_dir = self._current_direction
+        if self._current_direction is not None:
+            direction_value = 1 if self._current_direction == MovementDirection.LEFT else 0
+            self.pi.write(self.settings.stepper_direction_pin, direction_value)
 
-                # step
-                print(f'moving in {last_dir}')
-                self.pi.write(self.settings.stepper_step_pin, 1)
-                time.sleep(self.delay)
-                self.pi.write(self.settings.stepper_step_pin, 0)
-                time.sleep(self.delay)
-            else:
-                time.sleep(0.1)
+        self.pi.set_PWM_frequency(self.settings.stepper_step_pin, 500)
+        self.pi.set_PWM_dutycycle(self.settings.stepper_step_pin, 128)
+        time.sleep(1)
+        self.pi.set_PWM_dutycycle(self.settings.stepper_step_pin, 0)
+
+        # while True:
+        #
+        #
+        #         # step
+        #         print(f'moving in {last_dir}')
+        #         self.pi.write(self.settings.stepper_step_pin, 1)
+        #         time.sleep(self.delay)
+        #         self.pi.write(self.settings.stepper_step_pin, 0)
+        #         time.sleep(self.delay)
+        #     else:
+        #         time.sleep(0.1)
 
     def __del__(self):
         self.set_motor_enabled(False)

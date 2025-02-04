@@ -52,7 +52,7 @@ def create_app(config: HostingSettings | None = None):
         pi = pigpio.pi()
         pi.set_mode(device_settings.shutdown_pin, pigpio.INPUT)
         pi.set_pull_up_down(device_settings.shutdown_pin, pigpio.PUD_DOWN)
-        pi.callback(device_settings.shutdown_pin, pigpio.RISING_EDGE, lambda: shutdown(device_settings))
+        pi.callback(device_settings.shutdown_pin, pigpio.RISING_EDGE, lambda _1, _2, _3: shutdown(device_settings))
 
     # Create server
     return SjoelServerSocket(controller).init()
