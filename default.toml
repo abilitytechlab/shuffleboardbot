@@ -4,15 +4,6 @@ stepper_range = [0, 300] # tweak this not sure about the range, was not used in 
 communicator = "raw"
 shutdown_pin = 17
 
-[gcode]
-port = "COM8"
-baudrate = 250000
-fire_servo_name = "P0"
-stepper_axis = "X"
-stepper_step = 5
-stepper_steps_per_mm = 1000
-stepper_rate = 2000
-
 [raw]
 servo_pin = 18 # Servo bundle of three, two red, one black. Ground = black --> green. Signal = red --> purple. Vmot = red --> grey. 
 servo_frequency = 50
@@ -22,7 +13,7 @@ servo_movement_delay = 1
 stepper_enable_pin = 16
 stepper_direction_pin = 20
 stepper_step_pin = 21
-stepper_frequency = 100
+stepper_frequency = 250
 stepper_delay = 1.0
 wheel_left_enable = 12 # Unused 
 wheel_left_in1 = 5 # Unused (LET OP beide motoren zitten nu beide op left)
@@ -37,4 +28,4 @@ limitswitch_pin_left = 23
 pin_button = 11
 pin_left = 10
 pin_right = 9
-pull_direction = "UP"
+pull_direction = "up"

@@ -43,7 +43,7 @@ class SjoelControllerRaw(SjoelControllerBase):
         self.is_firing = False
 
     def move(self, direction: MovementDirection):
-        self.communicator.move_stepper(direction, self.settings.raw.stepper_steps)
+        self.communicator.move_stepper(direction)
 
     def try_stop_wheels(self):
         while True:

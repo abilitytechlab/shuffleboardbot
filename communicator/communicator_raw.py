@@ -59,7 +59,7 @@ class CommunicatorRaw:
         self.shutdown_helper.update()
         self.pi.write(self.settings.stepper_enable_pin, state)
 
-    def move_stepper(self, direction: MovementDirection, steps: int):
+    def move_stepper(self, direction: MovementDirection):
         """
         Move the stepper motor.
         Moves the given amount of steps in the given direction.
@@ -138,7 +138,7 @@ class CommunicatorRaw:
             direction_value = 1 if self._current_direction == MovementDirection.LEFT else 0
             self.pi.write(self.settings.stepper_direction_pin, direction_value)
 
-        self.pi.set_PWM_frequency(self.settings.stepper_step_pin, 500)
+        self.pi.set_PWM_frequency(self.settings.stepper_step_pin, self.settings.stepper_frequency)
         self.pi.set_PWM_dutycycle(self.settings.stepper_step_pin, 128)
         time.sleep(1)
         self.pi.set_PWM_dutycycle(self.settings.stepper_step_pin, 0)
