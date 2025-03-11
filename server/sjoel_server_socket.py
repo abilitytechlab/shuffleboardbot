@@ -84,6 +84,13 @@ class SjoelServerSocket(SjoelServerAbc):
             pos = self.controller.move(MovementDirection.RIGHT)
             self.socketio.emit('position', pos)
 
+        @self.socketio.on('stop')
+        def stop():
+            if not self._is_leader(request.sid):
+                return
+
+            self.controller.stop_move()
+
         @self.socketio.on('fire')
         def fire():
             if not self._is_leader(request.sid):

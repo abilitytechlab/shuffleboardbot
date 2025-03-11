@@ -25,7 +25,8 @@ class CommunicatorRaw:
 
         # Continuous stepper
         self._current_direction = None
-        self._move_worker = threading.Thread(target=self._move)
+        self._last_direction = None
+        self._move_worker = threading.Thread(target=self._move, daemon=True)
         self._move_worker.start()
 
         # Servo
@@ -66,27 +67,6 @@ class CommunicatorRaw:
         """
         self.shutdown_helper.update()
         self._current_direction = direction
-        self._move()
-
-        # # write direction
-        # direction_value = 1 if direction == MovementDirection.LEFT else 0
-        # self.pi.write(self.settings.stepper_direction_pin, direction_value)
-        # self._last_direction = direction
-        # print(f"moving {direction}", flush=True)
-        # limit_pin = self.settings.limitswitch_pin_right if direction == MovementDirection.RIGHT else self.settings.limitswitch_pin_left
-        #
-        # # write steps
-        # for _ in range(steps):
-        #     # Check if we are allowed to move every step
-        #     if self.pi.read(limit_pin) == 0:
-        #         print("move", flush=True)
-        #         self.pi.write(self.settings.stepper_step_pin, 1)
-        #         time.sleep(self.delay)
-        #         self.pi.write(self.settings.stepper_step_pin, 0)
-        #         time.sleep(self.delay)
-        #     else:
-        #         print("stop", flush=True)
-        #         return
 
     def set_servo_angle(self, angle: float):
         """
@@ -134,26 +114,21 @@ class CommunicatorRaw:
         self._current_direction = None
 
     def _move(self):
-        if self._current_direction is not None:
-            direction_value = 1 if self._current_direction == MovementDirection.LEFT else 0
-            self.pi.write(self.settings.stepper_direction_pin, direction_value)
+        while True:
+            limit_pin = self.settings.limitswitch_pin_right \
+                if self._current_direction == MovementDirection.RIGHT \
+                else self.settings.limitswitch_pin_left
 
-        self.pi.set_PWM_frequency(self.settings.stepper_step_pin, self.settings.stepper_frequency)
-        self.pi.set_PWM_dutycycle(self.settings.stepper_step_pin, 128)
-        time.sleep(1)
-        self.pi.set_PWM_dutycycle(self.settings.stepper_step_pin, 0)
+            if self._current_direction is None or self.pi.read(limit_pin) == 1:
+                self.pi.set_PWM_dutycycle(self.settings.stepper_step_pin, 0)
+            elif self._current_direction != self._last_direction:
+                direction_value = 0 if self._current_direction == MovementDirection.LEFT else 1
+                self.pi.write(self.settings.stepper_direction_pin, direction_value)
+                self.pi.set_PWM_frequency(self.settings.stepper_step_pin, self.settings.stepper_frequency)
+                self.pi.set_PWM_dutycycle(self.settings.stepper_step_pin, 128)
 
-        # while True:
-        #
-        #
-        #         # step
-        #         print(f'moving in {last_dir}')
-        #         self.pi.write(self.settings.stepper_step_pin, 1)
-        #         time.sleep(self.delay)
-        #         self.pi.write(self.settings.stepper_step_pin, 0)
-        #         time.sleep(self.delay)
-        #     else:
-        #         time.sleep(0.1)
+            self._last_direction = self._current_direction
+            time.sleep(0.1)
 
     def __del__(self):
         self.set_motor_enabled(False)

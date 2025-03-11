@@ -153,8 +153,8 @@
     <div style="grid-area: left">
         <button
                 class="control-button"
-                onmouseover="startEmitting('left')"
-                onmouseout="stopEmitting()"
+                onmouseover="emit('left')"
+                onmouseout="emit('stop')"
                 onclick="emit('left')">
             Links
         </button>
@@ -171,8 +171,8 @@
     <div style="grid-area: right">
         <button
                 class="control-button"
-                onmouseover="startEmitting('right')"
-                onmouseout="stopEmitting()"
+                onmouseover="emit('right')"
+                onmouseout="emit('stop')"
                 onclick="emit('right')">
             Rechts
         </button>
