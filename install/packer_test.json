@@ -77,6 +77,12 @@
             ]
         }
     ],
+    "post-processors": [
+        {
+            "type": "compress",
+            "output": "test.img.zip"
+        }
+    ],
     "variables": {
         "wifi_ssid": "{{env `WIFI_SSID`}}"
     }
