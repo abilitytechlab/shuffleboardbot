@@ -57,7 +57,6 @@ systemctl enable setup_wifi.service
 cp /opt/sjoel/install/sjoel.service /etc/systemd/system/
 systemctl enable pigpiod.service
 systemctl enable sjoel.service
-cat /var/log/sjoel_install.log
 
 # Setup fail2ban
 apt-get install -y fail2ban
