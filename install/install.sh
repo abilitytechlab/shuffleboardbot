@@ -51,12 +51,12 @@ chmod 4755 /sbin/shutdown
 cp /opt/sjoel/install/setup_wifi.service /etc/systemd/system/
 cp /opt/sjoel/install/setup_wifi.sh /usr/local/bin/
 chmod +x /usr/local/bin/setup_wifi.sh
-systemctl enable setup_wifi.service 2>>/var/log/sjoel_install.log
+systemctl enable setup_wifi.service
 
 # Install service
 cp /opt/sjoel/install/sjoel.service /etc/systemd/system/
-systemctl enable pigpiod.service 2>>/var/log/sjoel_install.log
-systemctl enable sjoel.service 2>>/var/log/sjoel_install.log
+systemctl enable pigpiod.service
+systemctl enable sjoel.service
 cat /var/log/sjoel_install.log
 
 # Setup fail2ban
