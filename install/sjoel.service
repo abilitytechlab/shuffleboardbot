@@ -3,7 +3,7 @@ Description=Server for hosting the sjoelrobot
 Requires=pigpiod.service
 
 [Service]
-ExecStart=/bin/bash -c 'source /opt/sjoel/venv/bin/activate && gunicorn -w 1 --threads 12 "main:create_app()" -b 0.0.0.0:5000'
+ExecStart=/bin/bash -c 'source /opt/sjoel/venv/bin/activate && gunicorn -w 1 --threads 12 "main:create_app()" -b 0.0.0.0:80'
 WorkingDirectory=/opt/sjoel
 User=sjoeluser
 Group=sjoeluser

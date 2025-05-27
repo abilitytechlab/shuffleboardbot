@@ -1,10 +1,18 @@
 name: build
 
-on: [workflow_dispatch, push]
+on: 
+  workflow_dispatch:
+    inputs:
+      Wifi_SSID:
+        description: 'Wifi SSID'
+        required: true
+        type: string
+      
 jobs:
   build:
     name: build
     runs-on: ubuntu-latest
+    
     steps:
       - uses: actions/checkout@v4
         with:
@@ -16,9 +24,9 @@ jobs:
             path: ".packer_cache/"
             key: ${{ runner.os }}-${{ hashFiles('src/install/packer_test.json') }}
       - name: Build
-        run: docker run --rm --privileged -v /dev:/dev -v ${PWD}:/build mkaczanowski/packer-builder-arm build src/install/packer_test.json
+        run: docker run --rm --privileged -v /dev:/dev -v ${PWD}:/build mkaczanowski/packer-builder-arm build src/install/packer_test.json -e WIFI_SSID="${{ github.event.inputs.Wifi_SSID }}"
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
           name: image
-          path: test.img
+          path: "${{ github.event.inputs.Wifi_SSID }}.img"

@@ -1,4 +1,5 @@
 {
+    "$schema": "https://raw.githubusercontent.com/lostintangent/packer-schema/refs/heads/master/packer.json",
     "builders": [
         {
             "type": "arm",
@@ -50,6 +51,20 @@
         },
         {
             "type": "shell",
+            "environment_vars": [
+                "WIFI_SSID={{user `wifi_ssid`}}"
+            ],
+            "inline": [
+                "ESCAPED_SSID=$(echo $WIFI_SSID | sed 's/[\/&]/\\\\&/g')",
+                "sed -i \"s/<%SSID%>/$ESCAPED_SSID/g\" /tmp/src/install/setup_wifi.sh"
+            ]
+        },
+        {
+            "type": "shell",
+            "inline": []
+        },
+        {
+            "type": "shell",
             "inline": [
                 "chmod +x /tmp/src/install/install.sh",
                 "bash /tmp/src/install/install.sh"
@@ -60,14 +75,9 @@
             "inline": [
                 "touch /boot/ssh"
             ]
-        },
-        {
-            "type": "shell",
-            "inline": [
-                "apt-get update",
-                "apt-get install git -y",
-                "git clone https://github.com/nodogsplash/nodogsplash.git"
-            ]
         }
-    ]
+    ],
+    "variables": {
+        "wifi_ssid": "{{env `WIFI_SSID`}}"
+    }
 }

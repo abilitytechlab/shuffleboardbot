@@ -32,16 +32,6 @@ mkdir /opt/sjoel
 cp -r $SCRIPT_DIR/../* /opt/sjoel
 mkdir -p /var/log/sjoelserver
 
-# Install dependencies
-# apt-get update
-# apt-get -y install software-properties-common python3-launchpadlib
-# apt-get update
-# add-apt-repository ppa:deadsnakes/ppa
-# apt-get update
-# apt-get -y upgrade
-# echo "Installing dependencies"
-# apt-get -y install python3.11 pigpio python3-pigpio
-
 # Create venv
 python3.11 -m venv /opt/sjoel/venv
 source /opt/sjoel/venv/bin/activate
@@ -68,3 +58,20 @@ cp /opt/sjoel/install/sjoel.service /etc/systemd/system/
 systemctl enable pigpiod.service 2>>/var/log/sjoel_install.log
 systemctl enable sjoel.service 2>>/var/log/sjoel_install.log
 cat /var/log/sjoel_install.log
+
+# Setup ufw
+apt-get update -y
+apt-get install -y ufw
+ufw default allow outgoing
+ufw default deny incoming
+ufw enable
+ufw allow ssh
+ufw allow 80/tcp
+
+# Setup fail2ban
+apt-get install -y fail2ban
+systemctl enable fail2ban
+systemctl start fail2ban
+
+# Rename hostname to sjoel
+hostnamectl set-hostname sjoel
