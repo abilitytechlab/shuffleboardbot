@@ -30,7 +30,7 @@ jobs:
             path: ".packer_cache/"
             key: ${{ runner.os }}-${{ hashFiles('install/packer_test.json') }}
       - name: Build
-        run: docker run --rm --privileged -v /dev:/dev -v ${PWD}:/build -e WIFI_SSID="${{ github.event.inputs.Wifi_SSID }}" mkaczanowski/packer-builder-arm build src/install/packer_test.json
+        run: docker run --rm --privileged -v /dev:/dev -v ${PWD}:/build -e WIFI_SSID="${{ github.event.inputs.Wifi_SSID }}" mkaczanowski/packer-builder-arm build install/packer_test.json
       - name: Sparse image
         run: |
           qemu img convert -O raw -S 1 test.img test-sparse.img
