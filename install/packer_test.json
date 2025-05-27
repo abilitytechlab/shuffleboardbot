@@ -45,8 +45,13 @@
     "provisioners": [
         {
             "type": "file",
-            "source": ".",
+            "source": "./src",
             "destination": "/tmp/src"
+        },
+        {
+            "type": "file",
+            "source": "./install",
+            "destination": "/tmp/install"
         },
         {
             "type": "shell",
@@ -55,14 +60,14 @@
             ],
             "inline": [
                 "ESCAPED_SSID=$(echo $WIFI_SSID | sed 's/[\/&]/\\\\&/g')",
-                "sed -i \"s/<%SSID%>/$ESCAPED_SSID/g\" /tmp/src/install/setup_wifi.sh"
+                "sed -i \"s/<%SSID%>/$ESCAPED_SSID/g\" /tmp/install/setup_wifi.sh"
             ]
         },
         {
             "type": "shell",
             "inline": [
-                "chmod +x /tmp/src/install/install.sh",
-                "bash /tmp/src/install/install.sh"
+                "chmod +x /tmp/install/install.sh",
+                "bash /tmp/install/install.sh"
             ]
         },
         {

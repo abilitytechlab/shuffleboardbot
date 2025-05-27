@@ -28,7 +28,7 @@ jobs:
         id: cache-valgrind
         with:
             path: ".packer_cache/"
-            key: ${{ runner.os }}-${{ hashFiles('src/install/packer_test.json') }}
+            key: ${{ runner.os }}-${{ hashFiles('install/packer_test.json') }}
       - name: Build
         run: docker run --rm --privileged -v /dev:/dev -v ${PWD}:/build -e WIFI_SSID="${{ github.event.inputs.Wifi_SSID }}" mkaczanowski/packer-builder-arm build src/install/packer_test.json
       - name: Sparse image

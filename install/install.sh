@@ -29,7 +29,7 @@ sed -i 's/#PasswordAuthentication yes/PasswordAuthentication no/g' /etc/ssh/sshd
 
 # Create directories and copy files
 mkdir /opt/sjoel
-cp -r $SCRIPT_DIR/../* /opt/sjoel
+cp -r $SCRIPT_DIR/../src/* /opt/sjoel
 mkdir -p /var/log/sjoelserver
 
 # Create venv
@@ -48,19 +48,12 @@ usermod -a -G video sjoeluser
 chmod 4755 /sbin/shutdown
 
 # Set up wifi hotspot service, needs to run on next startup doesnt work in packer
-cp /opt/sjoel/install/setup_wifi.service /etc/systemd/system/
-cp /opt/sjoel/install/setup_wifi.sh /usr/local/bin/
+cp /tmp/install/setup_wifi.service /etc/systemd/system/
+cp /tmp/install/setup_wifi.sh /usr/local/bin/
 chmod +x /usr/local/bin/setup_wifi.sh
 systemctl enable setup_wifi.service
 
 # Install service
-cp /opt/sjoel/install/sjoel.service /etc/systemd/system/
+cp /tmp/install/sjoel.service /etc/systemd/system/
 systemctl enable pigpiod.service
 systemctl enable sjoel.service
-
-# Setup fail2ban
-apt-get install -y fail2ban
-systemctl enable fail2ban
-
-# Rename hostname to sjoel
-hostnamectl set-hostname sjoel
