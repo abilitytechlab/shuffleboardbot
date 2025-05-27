@@ -7,7 +7,7 @@ on:
         description: 'Wifi SSID'
         required: true
         type: string
-run-name: ${{ github.event.inputs.Wifi_SSID }} - ${{ github.ref }}
+run-name: ${{ github.event.inputs.Wifi_SSID }} - ${{github.ref_name}} - ${{ github.sha }}
 jobs:
   build:
     name: build
@@ -17,6 +17,14 @@ jobs:
       - uses: actions/checkout@v4
         with:
           path: src
+      - name: Install QEMU static
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y qemu-user-static
+      - name: Register QEMU handlers
+        uses: docker/setup-qemu-action@v3
+        with:
+          platforms: linux/arm64
       - name: Cache packer
         uses: actions/cache@v4
         id: cache-valgrind
