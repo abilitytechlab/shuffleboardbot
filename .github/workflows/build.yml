@@ -17,10 +17,10 @@ jobs:
       - uses: actions/checkout@v4
         with:
           path: src
-      - name: Install QEMU static
+      - name: Install QEMU stuff
         run: |
           sudo apt-get update
-          sudo apt-get install -y qemu-user-static
+          sudo apt-get install -y qemu-user-static qemu-utils
       - name: Register QEMU handlers
         uses: docker/setup-qemu-action@v3
         with:
@@ -33,9 +33,14 @@ jobs:
             key: ${{ runner.os }}-${{ hashFiles('src/install/packer_test.json') }}
       - name: Build
         run: docker run --rm --privileged -v /dev:/dev -v ${PWD}:/build -e WIFI_SSID="${{ github.event.inputs.Wifi_SSID }}" mkaczanowski/packer-builder-arm build src/install/packer_test.json
+      - name: Sparse image
+        run: |
+          qemu img convert -O raw -S 1 test.img test-sparse.img
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
           name: image
-          path: "${{ github.event.inputs.Wifi_SSID }}.img"
+          path: |
+            test.img
+            test-sparse.img
 

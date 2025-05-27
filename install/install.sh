@@ -59,15 +59,6 @@ systemctl enable pigpiod.service 2>>/var/log/sjoel_install.log
 systemctl enable sjoel.service 2>>/var/log/sjoel_install.log
 cat /var/log/sjoel_install.log
 
-# Setup ufw
-apt-get update -y
-apt-get install -y ufw
-ufw default allow outgoing
-ufw default deny incoming
-ufw enable
-ufw allow ssh
-ufw allow 80/tcp
-
 # Setup fail2ban
 apt-get install -y fail2ban
 systemctl enable fail2ban
