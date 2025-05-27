@@ -7,7 +7,7 @@ on:
         description: 'Wifi SSID'
         required: true
         type: string
-run-name: ${{ github.event.inputs.Wifi_SSID }}
+run-name: ${{ github.event.inputs.Wifi_SSID }} - ${{ github.ref }}
 jobs:
   build:
     name: build

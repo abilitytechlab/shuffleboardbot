@@ -60,10 +60,6 @@
         },
         {
             "type": "shell",
-            "inline": []
-        },
-        {
-            "type": "shell",
             "inline": [
                 "chmod +x /tmp/src/install/install.sh",
                 "bash /tmp/src/install/install.sh"
