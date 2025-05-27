@@ -7,7 +7,7 @@ on:
         description: 'Wifi SSID'
         required: true
         type: string
-      
+run-name: ${{ github.event.inputs.Wifi_SSID }}
 jobs:
   build:
     name: build
@@ -30,3 +30,4 @@ jobs:
         with:
           name: image
           path: "${{ github.event.inputs.Wifi_SSID }}.img"
+

@@ -1,5 +1,4 @@
 {
-    "$schema": "https://raw.githubusercontent.com/lostintangent/packer-schema/refs/heads/master/packer.json",
     "builders": [
         {
             "type": "arm",
