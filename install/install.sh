@@ -62,7 +62,6 @@ cat /var/log/sjoel_install.log
 # Setup fail2ban
 apt-get install -y fail2ban
 systemctl enable fail2ban
-systemctl start fail2ban
 
 # Rename hostname to sjoel
 hostnamectl set-hostname sjoel
